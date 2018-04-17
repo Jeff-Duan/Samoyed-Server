@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace为命名空间，应该是mapper接口的全称-->
+<mapper namespace="com.cherish.demo.dao.BasicDao">
+
+    <resultMap id="supplierResultMap" type="com.cherish.demo.entity.basic.Supplier">
+        <id property="supplierId" column="supplier_id"></id>
+        <result property="supplierName" column="supplier_name"></result>
+        <result property="supplierAddress" column="supplier_address"></result>
+        <result property="supplierTel" column="supplier_tel"></result>
+        <result property="supplierEmail" column="supplier_email"></result>
+        <result property="supplierBank" column="supplier_bank"></result>
+        <collection property="materials" ofType="com.cherish.demo.entity.basic.Material">
+            <id property="materialId" column="material_id"></id>
+            <result property="materialName" column="material_name"></result>
+            <result property="materialPrice" column="material_price"></result>
+            <association property="unit" javaType="com.cherish.demo.entity.basic.Unit">
+                <id property="unitId" column="unit_id"></id>
+                <result property="unitName" column="unit_name"></result>
+            </association>
+        </collection>
+    </resultMap>
+
+    <select id="selectAllSupplier" resultMap="supplierResultMap">
+        <![CDATA[
+            select * from samoyed_basic_supplier_material_unit_middle a
+            left join samoyed_basic_supplier b on a.supplier_id=b.supplier_id
+            left join samoyed_basic_unit c on a.unit_id=c.unit_id
+            left join samoyed_basic_material d on a.material_id=d.material_id;
+        ]]>
+    </select>
+
+
+</mapper>

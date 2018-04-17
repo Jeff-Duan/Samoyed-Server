@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace为命名空间，应该是mapper接口的全称-->
+<mapper namespace="com.cherish.demo.dao.PurchaseDao">
+
+    <resultMap id="PurchaseOrderResultMap" type="com.cherish.demo.entity.purchase.PurchaseOrder">
+        <id property="orderId" column="order_id"></id>
+        <result property="orderNumber" column="order_number"></result>
+        <result property="orderInsertTime" column="order_insert_time"></result>
+        <result property="orderPayTime" column="order_pay_time"></result>
+        <result property="orderDeliveryTime" column="order_delivery_time"></result>
+        <result property="orderDeliveryAddress" column="order_delivery_address"></result>
+        <result property="orderPayType" column="order_pay_type"></result>
+        <result property="orderPayMoney" column="order_pay_money"></result>
+        <result property="orderPayBank" column="order_pay_bank"></result>
+        <result property="orderTotalMoney" column="order_total_money"></result>
+        <result property="orderRemark" column="order_remark"></result>
+        <result property="orderSupplierId" column="order_supplier_id"></result>
+        <result property="orderUserId" column="order_user_id"></result>
+        <result property="orderStatusId" column="order_status_id"></result>
+        <result property="orderIsPayMoney" column="order_is_pay_money"></result>
+        <result property="orderToPayMoney" column="order_to_pay_money"></result>
+        <association property="purchaseOrderStatus" javaType="com.cherish.demo.entity.purchase.PurchaseOrderStatus">
+            <id property="statusId" column="status_id"></id>
+            <result property="statusName" column="status_name"></result>
+        </association>
+        <association property="supplier" javaType="com.cherish.demo.entity.basic.Supplier">
+            <id property="supplierId" column="supplier_id"></id>
+            <result property="supplierName" column="supplier_name"></result>
+            <result property="supplierAddress" column="supplier_address"></result>
+            <result property="supplierTel" column="supplier_tel"></result>
+            <result property="supplierEmail" column="supplier_email"></result>
+            <result property="supplierBank" column="supplier_bank"></result>
+            <collection property="materials" ofType="com.cherish.demo.entity.basic.Material">
+                <id property="materialId" column="material_id"></id>
+                <result property="materialName" column="material_name"></result>
+                <result property="materialPrice" column="material_price"></result>
+                <association property="unit" javaType="com.cherish.demo.entity.basic.Unit">
+                    <id property="unitId" column="unit_id"></id>
+                    <result property="unitName" column="unit_name"></result>
+                </association>
+            </collection>
+        </association>
+        <association property="user" javaType="com.cherish.demo.entity.user.User">
+            <id property="userId" column="user_id"></id>
+            <result property="userName" column="user_name"></result>
+            <result property="userEnglishName" column="user_english_name"></result>
+            <result property="userPassword" column="user_password"></result>
+            <result property="userSex" column="user_sex"></result>
+            <result property="userBirth" column="user_birth"></result>
+            <result property="userOriginProvince" column="user_origin_province"></result>
+            <result property="userOriginCity" column="user_origin_city"></result>
+            <result property="userOriginArea" column="user_origin_area"></result>
+            <result property="userTel" column="user_tel"></result>
+            <result property="userStatus" column="user_status"></result>
+            <result property="userEntryTime" column="user_entry_time"></result>
+            <result property="userQuitTime" column="user_quit_time"></result>
+            <result property="userDeptId" column="user_dept_id"></result>
+            <result property="userPositionId" column="user_position_id"></result>
+            <association property="dept" javaType="com.cherish.demo.entity.user.Dept">
+                <id property="deptId" column="dept_id"></id>
+                <result property="deptName" column="dept_name"></result>
+            </association>
+            <association property="position" javaType="com.cherish.demo.entity.user.Position">
+                <id property="positionId" column="position_id"></id>
+                <result property="positionName" column="position_name"></result>
+            </association>
+        </association>
+        <collection property="purchaseOrderDetails" ofType="com.cherish.demo.entity.purchase.PurchaseOrderDetail">
+            <id property="detailId" column="detail_id"></id>
+            <result property="detailOrderNumber" column="detail_order_number"></result>
+            <result property="detailMaterialId" column="detail_material_id"></result>
+            <result property="detailMaterialPrice" column="detail_material_price"></result>
+            <result property="detailUnitName" column="detail_unit_name"></result>
+            <result property="detailMaterialNumber" column="detail_material_number"></result>
+            <association property="material" javaType="com.cherish.demo.entity.basic.Material">
+                <id property="materialId" column="material_id"></id>
+                <result property="materialName" column="material_name"></result>
+                <result property="materialPrice" column="material_price"></result>
+                <association property="unit" javaType="com.cherish.demo.entity.basic.Unit">
+                    <id property="unitId" column="unit_id"></id>
+                    <result property="unitName" column="unit_name"></result>
+                </association>
+            </association>
+        </collection>
+    </resultMap>
+
+    <insert id="insertPurchaseOrder" parameterType="com.cherish.demo.entity.purchase.PurchaseOrder">
+        insert into samoyed_purchase_order( order_number,order_insert_time, order_pay_time, order_delivery_time,
+        order_delivery_address, order_pay_type, order_pay_money, order_pay_bank, order_total_money, order_remark,
+        order_supplier_id, order_user_id, order_status_id, order_is_pay_money, order_to_pay_money )
+        values( #{orderNumber},#{orderInsertTime}, #{orderPayTime}, #{orderDeliveryTime}, #{orderDeliveryAddress},
+        #{orderPayType}, #{orderPayMoney}, #{orderPayBank}, #{orderTotalMoney}, #{orderRemark}, #{orderSupplierId},
+        #{orderUserId}, #{orderStatusId}, #{orderIsPayMoney}, #{orderToPayMoney} );
+    </insert>
+
+    <insert id="insertPurchaseOrderDetail" parameterType="com.cherish.demo.entity.purchase.PurchaseOrder">
+        insert into samoyed_purchase_order_detail( detail_order_number,detail_material_id,
+        detail_material_price,detail_unit_name,detail_material_number ) values( #{detailOrderNumber},
+        #{detailMaterialId},#{detailMaterialPrice},#{detailUnitName},#{detailMaterialNumber} );
+    </insert>
+
+    <select id="selectAllPurchaseOrder" resultMap="PurchaseOrderResultMap">
+        select * from samoyed_purchase_order a left join samoyed_purchase_order_detail b on
+        a.order_number=b.detail_order_number left join samoyed_purchase_order_status c on a.order_status_id=c.status_id
+        left join samoyed_basic_supplier d on a.order_supplier_id=d.supplier_id left join samoyed_user_user e on
+        a.order_user_id=e.user_id left join samoyed_user_dept f on e.user_dept_id=f.dept_id left join
+        samoyed_user_position g on e.user_position_id= g.position_id left join
+        samoyed_basic_supplier_material_unit_middle h on a.order_supplier_id=h.supplier_id
+        left join samoyed_basic_material i on h.material_id=i.material_id left join
+        samoyed_basic_unit j on h.unit_id= j.unit_id;
+    </select>
+
+
+</mapper>
