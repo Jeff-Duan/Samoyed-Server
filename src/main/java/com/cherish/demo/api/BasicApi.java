@@ -1,5 +1,6 @@
 package com.cherish.demo.api;
 
+import com.cherish.demo.entity.basic.Produce;
 import com.cherish.demo.entity.basic.Supplier;
 import com.cherish.demo.service.BasicService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,12 @@ public class BasicApi {
 
     @GetMapping(value = "/supplier/all")
     public List<Supplier> allSupplier() {
-        List<Supplier> suppliers = basicService.allSupplier();
-        return suppliers;
+        return basicService.allSupplier();
+    }
+
+    @GetMapping(value = "/produce/all")
+    public List<Produce> allProduce() {
+        return basicService.allProduce();
     }
 
 }

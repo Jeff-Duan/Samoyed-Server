@@ -16,7 +16,26 @@
         <collection property="materials" ofType="com.cherish.demo.entity.basic.Material">
             <id property="materialId" column="material_id"></id>
             <result property="materialName" column="material_name"></result>
-            <result property="materialPrice" column="material_price"></result>
+            <result property="materialPrice" column="middle_material_price"></result>
+            <association property="unit" javaType="com.cherish.demo.entity.basic.Unit">
+                <id property="unitId" column="unit_id"></id>
+                <result property="unitName" column="unit_name"></result>
+            </association>
+        </collection>
+    </resultMap>
+
+    <resultMap id="produceResultMap" type="com.cherish.demo.entity.basic.Produce">
+        <id property="produceId" column="produce_id"></id>
+        <result property="produceName" column="produce_name"></result>
+        <result property="produceMaterialId" column="produce_material_id"></result>
+        <association property="material" javaType="com.cherish.demo.entity.basic.Material">
+            <id property="materialId" column="material_id"></id>
+            <result property="materialName" column="material_name"></result>
+        </association>
+        <collection property="produceTypes" ofType="com.cherish.demo.entity.basic.ProduceType">
+            <id property="produceTypeId" column="produce_type_id"></id>
+            <result property="produceTypeName" column="produce_type_name"></result>
+            <result property="producePrice" column="produce_price"></result>
             <association property="unit" javaType="com.cherish.demo.entity.basic.Unit">
                 <id property="unitId" column="unit_id"></id>
                 <result property="unitName" column="unit_name"></result>
@@ -27,9 +46,19 @@
     <select id="selectAllSupplier" resultMap="supplierResultMap">
         <![CDATA[
             select * from samoyed_basic_supplier_material_unit_middle a
-            left join samoyed_basic_supplier b on a.supplier_id=b.supplier_id
-            left join samoyed_basic_unit c on a.unit_id=c.unit_id
-            left join samoyed_basic_material d on a.material_id=d.material_id;
+            left join samoyed_basic_supplier b on a.middle_supplier_id=b.supplier_id
+            left join samoyed_basic_unit c on a.middle_unit_id=c.unit_id
+            left join samoyed_basic_material d on a.middle_material_id=d.material_id;
+        ]]>
+    </select>
+
+    <select id="selectAllProduce" resultMap="produceResultMap">
+        <![CDATA[
+            select * from samoyed_basic_produce_type_unit_middle a
+            left join samoyed_basic_produce b on a.produce_id=b.produce_id
+            left join samoyed_basic_material c on b.produce_material_id=c.material_id
+            left join samoyed_basic_produce_type d on a.produce_type_id=d.produce_type_id
+            left join samoyed_basic_unit e on a.unit_id=e.unit_id;
         ]]>
     </select>
 

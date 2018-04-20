@@ -1,21 +1,19 @@
 package com.cherish.demo.api;
 
-import com.cherish.demo.entity.purchase.PurchaseOrder;
-import com.cherish.demo.service.PurchaseService;
+import com.cherish.demo.service.ProduceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/purchase")
-public class PurchaseApi {
+@RequestMapping("/api/produce")
+public class ProduceApi {
 
     @Autowired
-    PurchaseService purchaseService;
+    ProduceService produceService;
 
     private Map newResult(int code, String status, String message) {
         Map<String, Object> result = new HashMap<>();
@@ -33,22 +31,17 @@ public class PurchaseApi {
         return newResult(-1, "fail", "提交失败，请联系服务支持(Cherish-Hui)。");
     }
 
-    @PostMapping(value = "/apply")
-    public Map<String, Object> apply(@RequestParam("data") String data, HttpSession session) {
-        String result = purchaseService.apply(data, session);
+    @PostMapping(value = "/plan")
+    public Map<String, Object> plan(@RequestParam("data") String data, HttpSession session) {
+        String result = produceService.plan(data,session);
         switch (result) {
-            case PurchaseService.RESULT_SUCCESS:
+            case ProduceService.RESULT_SUCCESS:
                 return successResult();
-            case PurchaseService.RESULT_ERROR:
+            case ProduceService.RESULT_ERROR:
                 return failResult();
             default:
                 return failResult();
         }
-    }
-
-    @GetMapping(value = "/order/all")
-    public List<PurchaseOrder> allOrder() {
-        return purchaseService.getAll();
     }
 
 

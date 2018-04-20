@@ -7,9 +7,9 @@ public class PurchaseOrderDetail {
     private long detailId;
     private String detailOrderNumber;
     private long detailMaterialId;
-    private String detailMaterialPrice;
+    private double detailMaterialPrice;
     private String detailUnitName;
-    private long detailMaterialNumber;
+    private double detailMaterialNumber;
 
     private Material material;
 
@@ -37,11 +37,11 @@ public class PurchaseOrderDetail {
         this.detailMaterialId = detailMaterialId;
     }
 
-    public String getDetailMaterialPrice() {
+    public double getDetailMaterialPrice() {
         return detailMaterialPrice;
     }
 
-    public void setDetailMaterialPrice(String detailMaterialPrice) {
+    public void setDetailMaterialPrice(double detailMaterialPrice) {
         this.detailMaterialPrice = detailMaterialPrice;
     }
 
@@ -53,11 +53,11 @@ public class PurchaseOrderDetail {
         this.detailUnitName = detailUnitName;
     }
 
-    public long getDetailMaterialNumber() {
+    public double getDetailMaterialNumber() {
         return detailMaterialNumber;
     }
 
-    public void setDetailMaterialNumber(long detailMaterialNumber) {
+    public void setDetailMaterialNumber(double detailMaterialNumber) {
         this.detailMaterialNumber = detailMaterialNumber;
     }
 
@@ -68,5 +68,4 @@ public class PurchaseOrderDetail {
     public void setMaterial(Material material) {
         this.material = material;
     }
-
 }

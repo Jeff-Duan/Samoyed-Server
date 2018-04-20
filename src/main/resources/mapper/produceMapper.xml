@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace为命名空间，应该是mapper接口的全称-->
+<mapper namespace="com.cherish.demo.dao.ProduceDao">
+
+    <insert id="insertProduceOrder" parameterType="com.cherish.demo.entity.produce.ProduceOrder">
+        insert into samoyed_produce_order( order_number,order_insert_time, order_start_time,
+        order_end_time,order_remark, order_user_id, order_status_id ) values(
+        #{orderNumber},#{orderInsertTime},#{orderStartTime}, #{orderEndTime}, #{orderRemark}, #{orderUserId},
+        #{orderStatusId} );
+    </insert>
+
+    <insert id="insertProduceOrderDetail" parameterType="com.cherish.demo.entity.produce.ProduceOrderDetail">
+        insert into samoyed_produce_order_detail( detail_order_number,detail_produce_id,
+        detail_produce_unit_id,detail_produce_number,detail_material_id,detail_material_unit_id,detail_material_number)
+        values(#{detailOrderNumber},#{detailProduceId},#{detailProduceUnitId},#{detailProduceNumber},#{detailMaterialId}
+        ,#{detailMaterialUnitId},#{detailMaterialNumber});
+    </insert>
+
+
+</mapper>

@@ -1,7 +1,7 @@
 package com.cherish.demo.service;
 
-import com.cherish.demo.dao.PurchaseDao;
-import com.cherish.demo.entity.purchase.PurchaseOrder;
+import com.cherish.demo.dao.SaleDao;
+import com.cherish.demo.entity.sale.SaleOrder;
 import com.cherish.demo.entity.user.User;
 import com.cherish.demo.exception.NotFoundException;
 import com.cherish.demo.util.OrderNumber;
@@ -11,18 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PurchaseService {
+public class SaleService {
 
-    private static final Logger logger = Logger.getLogger(PurchaseService.class);
+    private static final Logger logger = Logger.getLogger(SaleService.class);
     public static final String RESULT_SUCCESS = "SUCCESS";
     public static final String RESULT_ERROR = "ERROR";
 
     @Autowired
-    PurchaseDao purchaseDao;
+    SaleDao saleDao;
 
     public String apply(String data, HttpSession session) {
         User user;
@@ -38,22 +37,17 @@ public class PurchaseService {
         String orderNumber = OrderNumber.getOrderIdByTime();
         //数据转换
         Gson gson = new Gson();
-        PurchaseOrder purchaseOrder = gson.fromJson(data, PurchaseOrder.class);
-        //填充订单编号-用户编号-待支付金额
-        purchaseOrder.setOrderNumber(orderNumber);
-        purchaseOrder.setOrderUserId(user.getUserId());
-        purchaseOrder.setOrderToPayMoney(purchaseOrder.getOrderTotalMoney());
-        //生成采购订单-订单明细
-        purchaseDao.insertPurchaseOrder(purchaseOrder);
-        purchaseOrder.getPurchaseOrderDetails().stream().forEach(purchaseOrderDetail -> {
-            purchaseOrderDetail.setDetailOrderNumber(orderNumber);
-            purchaseDao.insertPurchaseOrderDetail(purchaseOrderDetail);
+        SaleOrder saleOrder = gson.fromJson(data, SaleOrder.class);
+        //填充订单编号-用户编号
+        saleOrder.setOrderNumber(orderNumber);
+        saleOrder.setOrderUserId(user.getUserId());
+        //生成销售订单-订单明细
+        saleDao.insertSaleOrder(saleOrder);
+        saleOrder.getSaleOrderDetails().stream().forEach(saleOrderDetail -> {
+            saleOrderDetail.setDetailOrderNumber(orderNumber);
+            saleDao.insertSaleOrderDetail(saleOrderDetail);
         });
         return RESULT_SUCCESS;
-    }
-
-    public List<PurchaseOrder> getAll() {
-        return purchaseDao.selectAllPurchaseOrder();
     }
 
 }

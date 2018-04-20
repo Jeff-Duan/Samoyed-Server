@@ -1,6 +1,7 @@
 package com.cherish.demo.service;
 
 import com.cherish.demo.dao.BasicDao;
+import com.cherish.demo.entity.basic.Produce;
 import com.cherish.demo.entity.basic.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,4 +17,6 @@ public class BasicService {
     public List<Supplier> allSupplier() {
         return basicDao.selectAllSupplier();
     }
+
+    public List<Produce> allProduce() { return basicDao.selectAllProduce(); }
 }

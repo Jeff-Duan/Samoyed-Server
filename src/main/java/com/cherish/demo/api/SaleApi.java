@@ -1,21 +1,22 @@
 package com.cherish.demo.api;
 
-import com.cherish.demo.entity.purchase.PurchaseOrder;
-import com.cherish.demo.service.PurchaseService;
+import com.cherish.demo.service.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/purchase")
-public class PurchaseApi {
+@RequestMapping("/api/sale")
+public class SaleApi {
 
     @Autowired
-    PurchaseService purchaseService;
+    SaleService saleService;
 
     private Map newResult(int code, String status, String message) {
         Map<String, Object> result = new HashMap<>();
@@ -34,21 +35,16 @@ public class PurchaseApi {
     }
 
     @PostMapping(value = "/apply")
-    public Map<String, Object> apply(@RequestParam("data") String data, HttpSession session) {
-        String result = purchaseService.apply(data, session);
+    public Map<String, Object> plan(@RequestParam("data") String data, HttpSession session) {
+        String result = saleService.apply(data,session);
         switch (result) {
-            case PurchaseService.RESULT_SUCCESS:
+            case SaleService.RESULT_SUCCESS:
                 return successResult();
-            case PurchaseService.RESULT_ERROR:
+            case SaleService.RESULT_ERROR:
                 return failResult();
             default:
                 return failResult();
         }
-    }
-
-    @GetMapping(value = "/order/all")
-    public List<PurchaseOrder> allOrder() {
-        return purchaseService.getAll();
     }
 
 

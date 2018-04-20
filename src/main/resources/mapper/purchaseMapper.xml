@@ -34,15 +34,6 @@
             <result property="supplierTel" column="supplier_tel"></result>
             <result property="supplierEmail" column="supplier_email"></result>
             <result property="supplierBank" column="supplier_bank"></result>
-            <collection property="materials" ofType="com.cherish.demo.entity.basic.Material">
-                <id property="materialId" column="material_id"></id>
-                <result property="materialName" column="material_name"></result>
-                <result property="materialPrice" column="material_price"></result>
-                <association property="unit" javaType="com.cherish.demo.entity.basic.Unit">
-                    <id property="unitId" column="unit_id"></id>
-                    <result property="unitName" column="unit_name"></result>
-                </association>
-            </collection>
         </association>
         <association property="user" javaType="com.cherish.demo.entity.user.User">
             <id property="userId" column="user_id"></id>
@@ -104,14 +95,27 @@
     </insert>
 
     <select id="selectAllPurchaseOrder" resultMap="PurchaseOrderResultMap">
-        select * from samoyed_purchase_order a left join samoyed_purchase_order_detail b on
+        <!--select * from samoyed_purchase_order a left join (select * form samoyed_purchase_order u left join samoyed_purchase_order_detail v on u.order_number=v.detail_order_number left join samoyed_basic_material w on v.detail_material_id=w.material_id) b on
         a.order_number=b.detail_order_number left join samoyed_purchase_order_status c on a.order_status_id=c.status_id
         left join samoyed_basic_supplier d on a.order_supplier_id=d.supplier_id left join samoyed_user_user e on
         a.order_user_id=e.user_id left join samoyed_user_dept f on e.user_dept_id=f.dept_id left join
         samoyed_user_position g on e.user_position_id= g.position_id left join
         samoyed_basic_supplier_material_unit_middle h on a.order_supplier_id=h.supplier_id
         left join samoyed_basic_material i on h.material_id=i.material_id left join
-        samoyed_basic_unit j on h.unit_id= j.unit_id;
+        samoyed_basic_unit j on h.unit_id= j.unit_id ;-->
+        select * from
+        (select * from samoyed_purchase_order i
+        left join samoyed_basic_supplier j on i.order_supplier_id=j.supplier_id
+        left join (select * from samoyed_user_user x
+        left join samoyed_user_dept y on x.user_dept_id=y.dept_id
+        left join samoyed_user_position z on x.user_position_id= z.position_id
+        ) k on i.order_user_id=k.user_id
+        ) a
+        left join
+        (select * from samoyed_purchase_order_detail o
+        left join samoyed_basic_material p  on o.detail_material_id=p.material_id
+        ) b on a.order_number=b.detail_order_number
+        left join samoyed_purchase_order_status c on a.order_status_id=c.status_id;
     </select>
 
 

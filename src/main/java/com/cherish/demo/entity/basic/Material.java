@@ -4,7 +4,7 @@ public class Material {
 
     private long materialId;
     private String materialName;
-    private String materialPrice;
+    private double materialPrice;
 
     private Unit unit;
 
@@ -24,11 +24,11 @@ public class Material {
         this.materialName = materialName;
     }
 
-    public String getMaterialPrice() {
+    public double getMaterialPrice() {
         return materialPrice;
     }
 
-    public void setMaterialPrice(String materialPrice) {
+    public void setMaterialPrice(double materialPrice) {
         this.materialPrice = materialPrice;
     }
 
@@ -39,5 +39,4 @@ public class Material {
     public void setUnit(Unit unit) {
         this.unit = unit;
     }
-
 }

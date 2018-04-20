@@ -14,15 +14,15 @@ public class PurchaseOrder {
     private String orderDeliveryTime;
     private String orderDeliveryAddress;
     private long orderPayType;
-    private String orderPayMoney;
+    private double orderPayMoney;
     private String orderPayBank;
-    private String orderTotalMoney;
+    private double orderTotalMoney;
     private String orderRemark;
     private long orderSupplierId;
     private long orderUserId;
     private long orderStatusId;
-    private String orderIsPayMoney;
-    private String orderToPayMoney;
+    private double orderIsPayMoney;
+    private double orderToPayMoney;
 
     private List<PurchaseOrderDetail> purchaseOrderDetails;
     private PurchaseOrderStatus purchaseOrderStatus;
@@ -35,8 +35,8 @@ public class PurchaseOrder {
         this.orderDeliveryTime = "1980-01-01";
         this.orderRemark = "";
         this.orderStatusId = 1;
-        this.orderIsPayMoney = "0.00";
-        this.orderToPayMoney = "0.00";
+        this.orderIsPayMoney = 0.00;
+        this.orderToPayMoney = 0.00;
     }
 
     public long getOrderId() {
@@ -60,7 +60,7 @@ public class PurchaseOrder {
     }
 
     public void setOrderInsertTime(String orderInsertTime) {
-        this.orderInsertTime = orderInsertTime.substring(0, 10);
+        this.orderInsertTime = orderInsertTime;
     }
 
     public String getOrderPayTime() {
@@ -68,7 +68,7 @@ public class PurchaseOrder {
     }
 
     public void setOrderPayTime(String orderPayTime) {
-        this.orderPayTime = orderPayTime.substring(0, 10);
+        this.orderPayTime = orderPayTime;
     }
 
     public String getOrderDeliveryTime() {
@@ -76,7 +76,7 @@ public class PurchaseOrder {
     }
 
     public void setOrderDeliveryTime(String orderDeliveryTime) {
-        this.orderDeliveryTime = orderDeliveryTime.substring(0, 10);
+        this.orderDeliveryTime = orderDeliveryTime;
     }
 
     public String getOrderDeliveryAddress() {
@@ -95,11 +95,11 @@ public class PurchaseOrder {
         this.orderPayType = orderPayType;
     }
 
-    public String getOrderPayMoney() {
+    public double getOrderPayMoney() {
         return orderPayMoney;
     }
 
-    public void setOrderPayMoney(String orderPayMoney) {
+    public void setOrderPayMoney(double orderPayMoney) {
         this.orderPayMoney = orderPayMoney;
     }
 
@@ -111,11 +111,11 @@ public class PurchaseOrder {
         this.orderPayBank = orderPayBank;
     }
 
-    public String getOrderTotalMoney() {
+    public double getOrderTotalMoney() {
         return orderTotalMoney;
     }
 
-    public void setOrderTotalMoney(String orderTotalMoney) {
+    public void setOrderTotalMoney(double orderTotalMoney) {
         this.orderTotalMoney = orderTotalMoney;
     }
 
@@ -151,19 +151,19 @@ public class PurchaseOrder {
         this.orderStatusId = orderStatusId;
     }
 
-    public String getOrderIsPayMoney() {
+    public double getOrderIsPayMoney() {
         return orderIsPayMoney;
     }
 
-    public void setOrderIsPayMoney(String orderIsPayMoney) {
+    public void setOrderIsPayMoney(double orderIsPayMoney) {
         this.orderIsPayMoney = orderIsPayMoney;
     }
 
-    public String getOrderToPayMoney() {
+    public double getOrderToPayMoney() {
         return orderToPayMoney;
     }
 
-    public void setOrderToPayMoney(String orderToPayMoney) {
+    public void setOrderToPayMoney(double orderToPayMoney) {
         this.orderToPayMoney = orderToPayMoney;
     }
 
