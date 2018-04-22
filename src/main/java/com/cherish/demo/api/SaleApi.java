@@ -1,11 +1,10 @@
 package com.cherish.demo.api;
 
+import com.cherish.demo.entity.sale.SaleOrder;
 import com.cherish.demo.service.SaleService;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -45,6 +44,14 @@ public class SaleApi {
             default:
                 return failResult();
         }
+    }
+
+    @GetMapping(value = "/order/all")
+    public PageInfo<SaleOrder> allOrder(@RequestParam(value = "statusId", required = false, defaultValue = "0") String statusId,
+                                        @RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                        @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        PageInfo<SaleOrder> pageInfo = saleService.getAll(statusId, pageNum, pageSize);
+        return pageInfo;
     }
 
 

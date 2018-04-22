@@ -1,6 +1,8 @@
 package com.cherish.demo.api;
 
+import com.cherish.demo.entity.produce.ProduceOrder;
 import com.cherish.demo.service.ProduceService;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +44,14 @@ public class ProduceApi {
             default:
                 return failResult();
         }
+    }
+
+    @GetMapping(value = "/order/all")
+    public PageInfo<ProduceOrder> allOrder(@RequestParam(value = "statusId", required = false, defaultValue = "0") String statusId,
+                                           @RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                           @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        PageInfo<ProduceOrder> pageInfo = produceService.getAll(statusId, pageNum, pageSize);
+        return pageInfo;
     }
 
 

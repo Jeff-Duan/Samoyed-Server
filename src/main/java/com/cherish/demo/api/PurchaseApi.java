@@ -2,12 +2,12 @@ package com.cherish.demo.api;
 
 import com.cherish.demo.entity.purchase.PurchaseOrder;
 import com.cherish.demo.service.PurchaseService;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -47,9 +47,11 @@ public class PurchaseApi {
     }
 
     @GetMapping(value = "/order/all")
-    public List<PurchaseOrder> allOrder() {
-        return purchaseService.getAll();
+    public PageInfo<PurchaseOrder> allOrder(@RequestParam(value = "statusId", required = false, defaultValue = "0") String statusId,
+                                            @RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        PageInfo<PurchaseOrder> pageInfo = purchaseService.getAll(statusId, pageNum, pageSize);
+        return pageInfo;
     }
-
 
 }

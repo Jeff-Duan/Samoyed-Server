@@ -1,15 +1,21 @@
 package com.cherish.demo.entity.produce;
 
-public class ProduceOrderDetail {
+import com.cherish.demo.entity.basic.Produce;
+import com.cherish.demo.entity.basic.ProduceType;
+import com.cherish.demo.entity.basic.Unit;
+
+public class ProduceOrderActualDetail {
 
     private long detailId;
     private String detailOrderNumber;
     private long detailProduceId;
+    private long detailProduceTypeId;
     private long detailProduceUnitId;
     private double detailProduceNumber;
-    private long detailMaterialId;
-    private long detailMaterialUnitId;
-    private double detailMaterialNumber;
+
+    private Produce produce;
+    private ProduceType produceType;
+    private Unit unit;
 
     public long getDetailId() {
         return detailId;
@@ -35,6 +41,14 @@ public class ProduceOrderDetail {
         this.detailProduceId = detailProduceId;
     }
 
+    public long getDetailProduceTypeId() {
+        return detailProduceTypeId;
+    }
+
+    public void setDetailProduceTypeId(long detailProduceTypeId) {
+        this.detailProduceTypeId = detailProduceTypeId;
+    }
+
     public long getDetailProduceUnitId() {
         return detailProduceUnitId;
     }
@@ -51,27 +65,27 @@ public class ProduceOrderDetail {
         this.detailProduceNumber = detailProduceNumber;
     }
 
-    public long getDetailMaterialId() {
-        return detailMaterialId;
+    public Produce getProduce() {
+        return produce;
     }
 
-    public void setDetailMaterialId(long detailMaterialId) {
-        this.detailMaterialId = detailMaterialId;
+    public void setProduce(Produce produce) {
+        this.produce = produce;
     }
 
-    public long getDetailMaterialUnitId() {
-        return detailMaterialUnitId;
+    public ProduceType getProduceType() {
+        return produceType;
     }
 
-    public void setDetailMaterialUnitId(long detailMaterialUnitId) {
-        this.detailMaterialUnitId = detailMaterialUnitId;
+    public void setProduceType(ProduceType produceType) {
+        this.produceType = produceType;
     }
 
-    public double getDetailMaterialNumber() {
-        return detailMaterialNumber;
+    public Unit getUnit() {
+        return unit;
     }
 
-    public void setDetailMaterialNumber(double detailMaterialNumber) {
-        this.detailMaterialNumber = detailMaterialNumber;
+    public void setUnit(Unit unit) {
+        this.unit = unit;
     }
 }

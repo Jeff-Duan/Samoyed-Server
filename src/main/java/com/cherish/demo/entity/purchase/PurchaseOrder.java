@@ -56,27 +56,27 @@ public class PurchaseOrder {
     }
 
     public String getOrderInsertTime() {
-        return orderInsertTime;
+        return orderInsertTime.substring(0, 10);
     }
 
     public void setOrderInsertTime(String orderInsertTime) {
-        this.orderInsertTime = orderInsertTime;
+        this.orderInsertTime = orderInsertTime.substring(0, 10);
     }
 
     public String getOrderPayTime() {
-        return orderPayTime;
+        return orderPayTime.substring(0, 10);
     }
 
     public void setOrderPayTime(String orderPayTime) {
-        this.orderPayTime = orderPayTime;
+        this.orderPayTime = orderPayTime.substring(0, 10);
     }
 
     public String getOrderDeliveryTime() {
-        return orderDeliveryTime;
+        return orderDeliveryTime.substring(0, 10);
     }
 
     public void setOrderDeliveryTime(String orderDeliveryTime) {
-        this.orderDeliveryTime = orderDeliveryTime;
+        this.orderDeliveryTime = orderDeliveryTime.substring(0, 10);
     }
 
     public String getOrderDeliveryAddress() {

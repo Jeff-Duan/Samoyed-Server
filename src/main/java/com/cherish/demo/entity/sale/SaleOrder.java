@@ -1,5 +1,7 @@
 package com.cherish.demo.entity.sale;
 
+import com.cherish.demo.entity.user.User;
+
 import java.util.List;
 
 public class SaleOrder {
@@ -16,18 +18,21 @@ public class SaleOrder {
     private long orderUserId;
     private long orderStatusId;
     private double orderIsReceivableMoney;
-    private double ordertoReceivableMoney;
+    private double orderToReceivableMoney;
 
     private List<SaleOrderDetail> saleOrderDetails;
+    private SaleOrderStatus saleOrderStatus;
+    private User user;
 
-    public SaleOrder(){
+
+    public SaleOrder() {
         this.orderInsertTime = "1980-01-01";
         this.orderReceivableTime = "1980-01-01";
         this.orderSendTime = "1980-01-01";
         this.orderRemark = "";
         this.orderStatusId = 1;
         this.orderIsReceivableMoney = 0.00;
-        this.ordertoReceivableMoney = 0.00;
+        this.orderToReceivableMoney = 0.00;
     }
 
     public long getOrderId() {
@@ -47,27 +52,27 @@ public class SaleOrder {
     }
 
     public String getOrderInsertTime() {
-        return orderInsertTime;
+        return orderInsertTime.substring(0, 10);
     }
 
     public void setOrderInsertTime(String orderInsertTime) {
-        this.orderInsertTime = orderInsertTime;
+        this.orderInsertTime = orderInsertTime.substring(0, 10);
     }
 
     public String getOrderReceivableTime() {
-        return orderReceivableTime;
+        return orderReceivableTime.substring(0, 10);
     }
 
     public void setOrderReceivableTime(String orderReceivableTime) {
-        this.orderReceivableTime = orderReceivableTime;
+        this.orderReceivableTime = orderReceivableTime.substring(0, 10);
     }
 
     public String getOrderSendTime() {
-        return orderSendTime;
+        return orderSendTime.substring(0, 10);
     }
 
     public void setOrderSendTime(String orderSendTime) {
-        this.orderSendTime = orderSendTime;
+        this.orderSendTime = orderSendTime.substring(0, 10);
     }
 
     public String getOrderDeliveryAddress() {
@@ -126,12 +131,12 @@ public class SaleOrder {
         this.orderIsReceivableMoney = orderIsReceivableMoney;
     }
 
-    public double getOrdertoReceivableMoney() {
-        return ordertoReceivableMoney;
+    public double getOrderToReceivableMoney() {
+        return orderToReceivableMoney;
     }
 
-    public void setOrdertoReceivableMoney(double ordertoReceivableMoney) {
-        this.ordertoReceivableMoney = ordertoReceivableMoney;
+    public void setOrderToReceivableMoney(double orderToReceivableMoney) {
+        this.orderToReceivableMoney = orderToReceivableMoney;
     }
 
     public List<SaleOrderDetail> getSaleOrderDetails() {
@@ -140,5 +145,21 @@ public class SaleOrder {
 
     public void setSaleOrderDetails(List<SaleOrderDetail> saleOrderDetails) {
         this.saleOrderDetails = saleOrderDetails;
+    }
+
+    public SaleOrderStatus getSaleOrderStatus() {
+        return saleOrderStatus;
+    }
+
+    public void setSaleOrderStatus(SaleOrderStatus saleOrderStatus) {
+        this.saleOrderStatus = saleOrderStatus;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

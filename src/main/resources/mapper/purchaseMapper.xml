@@ -60,23 +60,24 @@
                 <result property="positionName" column="position_name"></result>
             </association>
         </association>
-        <collection property="purchaseOrderDetails" ofType="com.cherish.demo.entity.purchase.PurchaseOrderDetail">
-            <id property="detailId" column="detail_id"></id>
-            <result property="detailOrderNumber" column="detail_order_number"></result>
-            <result property="detailMaterialId" column="detail_material_id"></result>
-            <result property="detailMaterialPrice" column="detail_material_price"></result>
-            <result property="detailUnitName" column="detail_unit_name"></result>
-            <result property="detailMaterialNumber" column="detail_material_number"></result>
-            <association property="material" javaType="com.cherish.demo.entity.basic.Material">
-                <id property="materialId" column="material_id"></id>
-                <result property="materialName" column="material_name"></result>
-                <result property="materialPrice" column="material_price"></result>
-                <association property="unit" javaType="com.cherish.demo.entity.basic.Unit">
-                    <id property="unitId" column="unit_id"></id>
-                    <result property="unitName" column="unit_name"></result>
-                </association>
+    </resultMap>
+
+    <resultMap id="PurchaseOrderDetailResultMap" type="com.cherish.demo.entity.purchase.PurchaseOrderDetail">
+        <id property="detailId" column="detail_id"></id>
+        <result property="detailOrderNumber" column="detail_order_number"></result>
+        <result property="detailMaterialId" column="detail_material_id"></result>
+        <result property="detailMaterialPrice" column="detail_material_price"></result>
+        <result property="detailUnitId" column="detail_unit_id"></result>
+        <result property="detailMaterialNumber" column="detail_material_number"></result>
+        <association property="material" javaType="com.cherish.demo.entity.basic.Material">
+            <id property="materialId" column="material_id"></id>
+            <result property="materialName" column="material_name"></result>
+            <result property="materialPrice" column="material_price"></result>
+            <association property="unit" javaType="com.cherish.demo.entity.basic.Unit">
+                <id property="unitId" column="unit_id"></id>
+                <result property="unitName" column="unit_name"></result>
             </association>
-        </collection>
+        </association>
     </resultMap>
 
     <insert id="insertPurchaseOrder" parameterType="com.cherish.demo.entity.purchase.PurchaseOrder">
@@ -90,32 +91,28 @@
 
     <insert id="insertPurchaseOrderDetail" parameterType="com.cherish.demo.entity.purchase.PurchaseOrder">
         insert into samoyed_purchase_order_detail( detail_order_number,detail_material_id,
-        detail_material_price,detail_unit_name,detail_material_number ) values( #{detailOrderNumber},
-        #{detailMaterialId},#{detailMaterialPrice},#{detailUnitName},#{detailMaterialNumber} );
+        detail_material_price,detail_unit_id,detail_material_number ) values( #{detailOrderNumber},
+        #{detailMaterialId},#{detailMaterialPrice},#{detailUnitId},#{detailMaterialNumber} );
     </insert>
 
-    <select id="selectAllPurchaseOrder" resultMap="PurchaseOrderResultMap">
-        <!--select * from samoyed_purchase_order a left join (select * form samoyed_purchase_order u left join samoyed_purchase_order_detail v on u.order_number=v.detail_order_number left join samoyed_basic_material w on v.detail_material_id=w.material_id) b on
-        a.order_number=b.detail_order_number left join samoyed_purchase_order_status c on a.order_status_id=c.status_id
-        left join samoyed_basic_supplier d on a.order_supplier_id=d.supplier_id left join samoyed_user_user e on
-        a.order_user_id=e.user_id left join samoyed_user_dept f on e.user_dept_id=f.dept_id left join
-        samoyed_user_position g on e.user_position_id= g.position_id left join
-        samoyed_basic_supplier_material_unit_middle h on a.order_supplier_id=h.supplier_id
-        left join samoyed_basic_material i on h.material_id=i.material_id left join
-        samoyed_basic_unit j on h.unit_id= j.unit_id ;-->
-        select * from
-        (select * from samoyed_purchase_order i
-        left join samoyed_basic_supplier j on i.order_supplier_id=j.supplier_id
-        left join (select * from samoyed_user_user x
-        left join samoyed_user_dept y on x.user_dept_id=y.dept_id
-        left join samoyed_user_position z on x.user_position_id= z.position_id
-        ) k on i.order_user_id=k.user_id
-        ) a
-        left join
-        (select * from samoyed_purchase_order_detail o
-        left join samoyed_basic_material p  on o.detail_material_id=p.material_id
-        ) b on a.order_number=b.detail_order_number
-        left join samoyed_purchase_order_status c on a.order_status_id=c.status_id;
+    <select id="selectAllPurchaseOrder" parameterType="String" resultMap="PurchaseOrderResultMap">
+        select * from samoyed_purchase_order a
+        left join samoyed_basic_supplier b on a.order_supplier_id=b.supplier_id
+        left join samoyed_user_user c on a.order_user_id=c.user_id
+        left join samoyed_user_dept d on c.user_dept_id=d.dept_id
+        left join samoyed_user_position e on c.user_position_id= e.position_id
+        left join samoyed_purchase_order_status f on a.order_status_id=f.status_id
+        where 1=1
+        <if test="_parameter !=0 and _parameter != 0">
+            and a.order_status_id=#{statusId}
+        </if>
+    </select>
+
+    <select id="selectPurchaseOrderDetailByOrderNumber" parameterType="String" resultMap="PurchaseOrderDetailResultMap">
+        select * from samoyed_purchase_order_detail a
+        left join samoyed_basic_material b on a.detail_material_id=b.material_id
+        left join samoyed_basic_unit c on a.detail_unit_id=c.unit_id
+        where a.detail_order_number=#{orderNumber}
     </select>
 
 

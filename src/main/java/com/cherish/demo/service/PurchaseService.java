@@ -5,6 +5,8 @@ import com.cherish.demo.entity.purchase.PurchaseOrder;
 import com.cherish.demo.entity.user.User;
 import com.cherish.demo.exception.NotFoundException;
 import com.cherish.demo.util.OrderNumber;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +54,15 @@ public class PurchaseService {
         return RESULT_SUCCESS;
     }
 
-    public List<PurchaseOrder> getAll() {
-        return purchaseDao.selectAllPurchaseOrder();
+    public PageInfo<PurchaseOrder> getAll(String statusId,Integer pageNum, Integer pageSize) {
+        //分页
+        PageHelper.startPage(pageNum, pageSize);
+        List<PurchaseOrder> purchaseOrders = purchaseDao.selectAllPurchaseOrder(statusId);
+        PageInfo<PurchaseOrder> pageInfo = new PageInfo<PurchaseOrder>(purchaseOrders);
+        pageInfo.getList().stream().forEach(purchaseOrder -> {
+            purchaseOrder.setPurchaseOrderDetails(purchaseDao.selectPurchaseOrderDetailByOrderNumber(purchaseOrder.getOrderNumber()));
+        });
+        return pageInfo;
     }
 
 }

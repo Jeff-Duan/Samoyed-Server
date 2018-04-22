@@ -13,6 +13,8 @@ public interface PurchaseDao {
 
     void insertPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail);
 
-    List<PurchaseOrder> selectAllPurchaseOrder();
+    List<PurchaseOrder> selectAllPurchaseOrder(String statusId);
+
+    List<PurchaseOrderDetail> selectPurchaseOrderDetailByOrderNumber(String orderNumber);
 
 }

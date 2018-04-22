@@ -6,6 +6,115 @@
 <!-- namespace为命名空间，应该是mapper接口的全称-->
 <mapper namespace="com.cherish.demo.dao.ProduceDao">
 
+    <resultMap id="ProduceOrderResultMap" type="com.cherish.demo.entity.produce.ProduceOrder">
+        <id property="orderId" column="order_id"></id>
+        <result property="orderNumber" column="order_number"></result>
+        <result property="orderInsertTime" column="order_insert_time"></result>
+        <result property="orderStartTime" column="order_start_time"></result>
+        <result property="orderEndTime" column="order_end_time"></result>
+        <result property="orderRemark" column="order_remark"></result>
+        <result property="orderUserId" column="order_user_id"></result>
+        <result property="orderStatusId" column="order_status_id"></result>
+        <result property="orderWasteNumber" column="order_waste_number"></result>
+        <result property="orderWasteUnitId" column="order_waste_unit_id"></result>
+        <association property="produceOrderStatus" javaType="com.cherish.demo.entity.produce.ProduceOrderStatus">
+            <id property="statusId" column="status_id"></id>
+            <result property="statusName" column="status_name"></result>
+        </association>
+        <association property="user" javaType="com.cherish.demo.entity.user.User">
+            <id property="userId" column="user_id"></id>
+            <result property="userName" column="user_name"></result>
+            <result property="userEnglishName" column="user_english_name"></result>
+            <result property="userPassword" column="user_password"></result>
+            <result property="userSex" column="user_sex"></result>
+            <result property="userBirth" column="user_birth"></result>
+            <result property="userOriginProvince" column="user_origin_province"></result>
+            <result property="userOriginCity" column="user_origin_city"></result>
+            <result property="userOriginArea" column="user_origin_area"></result>
+            <result property="userTel" column="user_tel"></result>
+            <result property="userStatus" column="user_status"></result>
+            <result property="userEntryTime" column="user_entry_time"></result>
+            <result property="userQuitTime" column="user_quit_time"></result>
+            <result property="userDeptId" column="user_dept_id"></result>
+            <result property="userPositionId" column="user_position_id"></result>
+            <association property="dept" javaType="com.cherish.demo.entity.user.Dept">
+                <id property="deptId" column="dept_id"></id>
+                <result property="deptName" column="dept_name"></result>
+            </association>
+            <association property="position" javaType="com.cherish.demo.entity.user.Position">
+                <id property="positionId" column="position_id"></id>
+                <result property="positionName" column="position_name"></result>
+            </association>
+        </association>
+        <association property="unit" javaType="com.cherish.demo.entity.basic.Unit">
+            <id property="unitId" column="unit_id"></id>
+            <result property="unitName" column="unit_name"></result>
+        </association>
+    </resultMap>
+
+    <resultMap id="ProduceOrderPlanDetailResultMap1" type="com.cherish.demo.entity.produce.ProduceOrderPlanDetail">
+        <id property="detailId" column="detail_id"></id>
+        <result property="detailOrderNumber" column="detail_order_number"></result>
+        <result property="detailProduceId" column="detail_produce_id"></result>
+        <result property="detailProduceUnitId" column="detail_produce_unit_id"></result>
+        <result property="detailProduceNumber" column="detail_produce_number"></result>
+        <result property="detailMaterialId" column="detail_material_id"></result>
+        <result property="detailMaterialUnitId" column="detail_material_unit_id"></result>
+        <result property="detailMaterialNumber" column="detail_material_number"></result>
+        <association property="produce" javaType="com.cherish.demo.entity.basic.Produce">
+            <id property="produceId" column="produce_id"></id>
+            <result property="produceName" column="produce_name"></result>
+            <result property="produceMaterialId" column="produce_material_id"></result>
+        </association>
+        <association property="produceUnit" javaType="com.cherish.demo.entity.basic.Unit">
+            <id property="unitId" column="unit_id"></id>
+            <result property="unitName" column="unit_name"></result>
+        </association>
+    </resultMap>
+
+    <resultMap id="ProduceOrderPlanDetailResultMap2" type="com.cherish.demo.entity.produce.ProduceOrderPlanDetail">
+        <id property="detailId" column="detail_id"></id>
+        <result property="detailOrderNumber" column="detail_order_number"></result>
+        <result property="detailProduceId" column="detail_produce_id"></result>
+        <result property="detailProduceUnitId" column="detail_produce_unit_id"></result>
+        <result property="detailProduceNumber" column="detail_produce_number"></result>
+        <result property="detailMaterialId" column="detail_material_id"></result>
+        <result property="detailMaterialUnitId" column="detail_material_unit_id"></result>
+        <result property="detailMaterialNumber" column="detail_material_number"></result>
+        <association property="material" javaType="com.cherish.demo.entity.basic.Material">
+            <id property="materialId" column="material_id"></id>
+            <result property="materialName" column="material_name"></result>
+            <result property="materialPrice" column="material_price"></result>
+        </association>
+        <association property="materialUnit" javaType="com.cherish.demo.entity.basic.Unit">
+            <id property="unitId" column="unit_id"></id>
+            <result property="unitName" column="unit_name"></result>
+        </association>
+    </resultMap>
+
+    <resultMap id="ProduceOrderActualDetailResultMap" type="com.cherish.demo.entity.produce.ProduceOrderActualDetail">
+        <id property="detailId" column="detail_id"></id>
+        <result property="detailOrderNumber" column="detail_order_number"></result>
+        <result property="detailProduceId" column="detail_produce_id"></result>
+        <result property="detailProduceTypeId" column="detail_produce_type_id"></result>
+        <result property="detailProduceUnitId" column="detail_produce_unit_id"></result>
+        <result property="detailProduceNumber" column="detail_produce_number"></result>
+        <association property="produce" javaType="com.cherish.demo.entity.basic.Produce">
+            <id property="produceId" column="produce_id"></id>
+            <result property="produceName" column="produce_name"></result>
+            <result property="produceMaterialId" column="produce_material_id"></result>
+        </association>
+        <association property="produceType" javaType="com.cherish.demo.entity.basic.ProduceType">
+            <id property="produceTypeId" column="produce_type_id"></id>
+            <result property="produceTypeName" column="produce_type_name"></result>
+        </association>
+        <association property="unit" javaType="com.cherish.demo.entity.basic.Unit">
+            <id property="unitId" column="unit_id"></id>
+            <result property="unitName" column="unit_name"></result>
+        </association>
+    </resultMap>
+
+
     <insert id="insertProduceOrder" parameterType="com.cherish.demo.entity.produce.ProduceOrder">
         insert into samoyed_produce_order( order_number,order_insert_time, order_start_time,
         order_end_time,order_remark, order_user_id, order_status_id ) values(
@@ -13,12 +122,50 @@
         #{orderStatusId} );
     </insert>
 
-    <insert id="insertProduceOrderDetail" parameterType="com.cherish.demo.entity.produce.ProduceOrderDetail">
-        insert into samoyed_produce_order_detail( detail_order_number,detail_produce_id,
+    <insert id="insertProduceOrderPlanDetail" parameterType="com.cherish.demo.entity.produce.ProduceOrderPlanDetail">
+        insert into samoyed_produce_order_plan_detail( detail_order_number,detail_produce_id,
         detail_produce_unit_id,detail_produce_number,detail_material_id,detail_material_unit_id,detail_material_number)
         values(#{detailOrderNumber},#{detailProduceId},#{detailProduceUnitId},#{detailProduceNumber},#{detailMaterialId}
         ,#{detailMaterialUnitId},#{detailMaterialNumber});
     </insert>
+
+    <select id="selectAllProduceOrder" parameterType="String" resultMap="ProduceOrderResultMap">
+        select * from samoyed_produce_order a
+        left join samoyed_user_user b on a.order_user_id=b.user_id
+        left join samoyed_user_dept c on b.user_dept_id=c.dept_id
+        left join samoyed_user_position d on b.user_position_id= d.position_id
+        left join samoyed_produce_order_status e on a.order_status_id=e.status_id
+        left join samoyed_basic_unit f on a.order_waste_unit_id=f.unit_id
+        where 1=1
+        <if test="_parameter !=0 and _parameter != 0">
+            and a.order_status_id=#{statusId}
+        </if>
+    </select>
+
+    <select id="selectAllProduceOrderPlanDetailProduceByOrderNumber" parameterType="String"
+            resultMap="ProduceOrderPlanDetailResultMap1">
+        select * from samoyed_produce_order_plan_detail a
+        left join samoyed_basic_produce b on a.detail_produce_id=b.produce_id
+        left join samoyed_basic_unit d on a.detail_produce_unit_id=d.unit_id
+        where a.detail_order_number=#{orderNumber}
+    </select>
+
+    <select id="selectAllProduceOrderPlanDetailMaterialByOrderNumber" parameterType="String"
+            resultMap="ProduceOrderPlanDetailResultMap2">
+        select * from samoyed_produce_order_plan_detail a
+        left join samoyed_basic_material b on a.detail_material_id=b.material_id
+        left join samoyed_basic_unit c on a.detail_material_unit_id=c.unit_id
+        where a.detail_order_number=#{orderNumber}
+    </select>
+
+    <select id="selectAllProduceOrderActualDetailByOrderNumber" parameterType="String"
+            resultMap="ProduceOrderActualDetailResultMap">
+        select * from samoyed_produce_order_actual_detail a
+        left join samoyed_basic_produce b on a.detail_produce_id=b.produce_id
+        left join samoyed_basic_produce_type c on a.detail_produce_type_id=c.produce_type_id
+        left join samoyed_basic_unit d on a.detail_produce_unit_id=d.unit_id
+        where a.detail_order_number=#{orderNumber}
+    </select>
 
 
 </mapper>

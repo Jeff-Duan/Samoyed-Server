@@ -5,12 +5,15 @@ import com.cherish.demo.entity.sale.SaleOrder;
 import com.cherish.demo.entity.user.User;
 import com.cherish.demo.exception.NotFoundException;
 import com.cherish.demo.util.OrderNumber;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,6 +51,17 @@ public class SaleService {
             saleDao.insertSaleOrderDetail(saleOrderDetail);
         });
         return RESULT_SUCCESS;
+    }
+
+    public PageInfo<SaleOrder> getAll(String statusId, Integer pageNum, Integer pageSize) {
+        //分页
+        PageHelper.startPage(pageNum, pageSize);
+        List<SaleOrder> saleOrders = saleDao.selectAllSaleOrder(statusId);
+        PageInfo<SaleOrder> pageInfo = new PageInfo<SaleOrder>(saleOrders);
+        pageInfo.getList().stream().forEach(saleOrder -> {
+            saleOrder.setSaleOrderDetails(saleDao.selectSaleOrderDetailByOrderNumber(saleOrder.getOrderNumber()));
+        });
+        return pageInfo;
     }
 
 }

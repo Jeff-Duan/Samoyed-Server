@@ -1,22 +1,24 @@
-package com.cherish.demo.entity.sale;
+package com.cherish.demo.entity.produce;
 
+import com.cherish.demo.entity.basic.Material;
 import com.cherish.demo.entity.basic.Produce;
-import com.cherish.demo.entity.basic.ProduceType;
 import com.cherish.demo.entity.basic.Unit;
 
-public class SaleOrderDetail {
+public class ProduceOrderPlanDetail {
 
     private long detailId;
     private String detailOrderNumber;
     private long detailProduceId;
-    private long detailProduceTypeId;
-    private double detailProducePrice;
     private long detailProduceUnitId;
     private double detailProduceNumber;
+    private long detailMaterialId;
+    private long detailMaterialUnitId;
+    private double detailMaterialNumber;
 
     private Produce produce;
-    private ProduceType produceType;
-    private Unit unit;
+    private Unit produceUnit;
+    private Material material;
+    private Unit materialUnit;
 
     public long getDetailId() {
         return detailId;
@@ -42,22 +44,6 @@ public class SaleOrderDetail {
         this.detailProduceId = detailProduceId;
     }
 
-    public long getDetailProduceTypeId() {
-        return detailProduceTypeId;
-    }
-
-    public void setDetailProduceTypeId(long detailProduceTypeId) {
-        this.detailProduceTypeId = detailProduceTypeId;
-    }
-
-    public double getDetailProducePrice() {
-        return detailProducePrice;
-    }
-
-    public void setDetailProducePrice(double detailProducePrice) {
-        this.detailProducePrice = detailProducePrice;
-    }
-
     public long getDetailProduceUnitId() {
         return detailProduceUnitId;
     }
@@ -74,6 +60,30 @@ public class SaleOrderDetail {
         this.detailProduceNumber = detailProduceNumber;
     }
 
+    public long getDetailMaterialId() {
+        return detailMaterialId;
+    }
+
+    public void setDetailMaterialId(long detailMaterialId) {
+        this.detailMaterialId = detailMaterialId;
+    }
+
+    public long getDetailMaterialUnitId() {
+        return detailMaterialUnitId;
+    }
+
+    public void setDetailMaterialUnitId(long detailMaterialUnitId) {
+        this.detailMaterialUnitId = detailMaterialUnitId;
+    }
+
+    public double getDetailMaterialNumber() {
+        return detailMaterialNumber;
+    }
+
+    public void setDetailMaterialNumber(double detailMaterialNumber) {
+        this.detailMaterialNumber = detailMaterialNumber;
+    }
+
     public Produce getProduce() {
         return produce;
     }
@@ -82,19 +92,27 @@ public class SaleOrderDetail {
         this.produce = produce;
     }
 
-    public ProduceType getProduceType() {
-        return produceType;
+    public Unit getProduceUnit() {
+        return produceUnit;
     }
 
-    public void setProduceType(ProduceType produceType) {
-        this.produceType = produceType;
+    public void setProduceUnit(Unit produceUnit) {
+        this.produceUnit = produceUnit;
     }
 
-    public Unit getUnit() {
-        return unit;
+    public Material getMaterial() {
+        return material;
     }
 
-    public void setUnit(Unit unit) {
-        this.unit = unit;
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
+    public Unit getMaterialUnit() {
+        return materialUnit;
+    }
+
+    public void setMaterialUnit(Unit materialUnit) {
+        this.materialUnit = materialUnit;
     }
 }
