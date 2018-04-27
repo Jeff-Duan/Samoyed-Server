@@ -110,5 +110,32 @@
         where a.detail_order_number=#{orderNumber}
     </select>
 
+    <select id="selectAllIsPayDepositSaleOrder" parameterType="String" resultMap="SaleOrderResultMap">
+        select * from samoyed_sale_order a
+        left join samoyed_user_user b on a.order_user_id=b.user_id
+        left join samoyed_user_dept c on b.user_dept_id=c.dept_id
+        left join samoyed_user_position d on b.user_position_id= d.position_id
+        left join samoyed_purchase_order_status e on a.order_status_id=e.status_id
+        where a.order_status_id=2
+    </select>
+
+    <select id="selectAllIsPayFinalSaleOrder" parameterType="String" resultMap="SaleOrderResultMap">
+        select * from samoyed_sale_order a
+        left join samoyed_user_user b on a.order_user_id=b.user_id
+        left join samoyed_user_dept c on b.user_dept_id=c.dept_id
+        left join samoyed_user_position d on b.user_position_id= d.position_id
+        left join samoyed_purchase_order_status e on a.order_status_id=e.status_id
+        where a.order_status_id=4
+    </select>
+
+    <select id="selectAllIsSuccessSaleOrder" parameterType="String" resultMap="SaleOrderResultMap">
+        select * from samoyed_sale_order a
+        left join samoyed_user_user b on a.order_user_id=b.user_id
+        left join samoyed_user_dept c on b.user_dept_id=c.dept_id
+        left join samoyed_user_position d on b.user_position_id= d.position_id
+        left join samoyed_purchase_order_status e on a.order_status_id=e.status_id
+        where a.order_status_id=5
+    </select>
+
 
 </mapper>

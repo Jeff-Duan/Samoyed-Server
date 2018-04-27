@@ -17,4 +17,10 @@ public interface SaleDao {
 
     List<SaleOrderDetail> selectSaleOrderDetailByOrderNumber(String orderNumber);
 
+    List<SaleOrder> selectAllIsPayDepositSaleOrder();
+
+    List<SaleOrder> selectAllIsPayFinalSaleOrder();
+
+    List<SaleOrder> selectAllIsSuccessSaleOrder();
+
 }

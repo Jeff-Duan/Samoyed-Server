@@ -64,4 +64,37 @@ public class SaleService {
         return pageInfo;
     }
 
+    public PageInfo<SaleOrder> getIsPayDeposit(Integer pageNum, Integer pageSize) {
+        //分页
+        PageHelper.startPage(pageNum, pageSize);
+        List<SaleOrder> saleOrders = saleDao.selectAllIsPayDepositSaleOrder();
+        PageInfo<SaleOrder> pageInfo = new PageInfo<SaleOrder>(saleOrders);
+        pageInfo.getList().stream().forEach(saleOrder -> {
+            saleOrder.setSaleOrderDetails(saleDao.selectSaleOrderDetailByOrderNumber(saleOrder.getOrderNumber()));
+        });
+        return pageInfo;
+    }
+
+    public PageInfo<SaleOrder> getIsPayFinal(Integer pageNum, Integer pageSize) {
+        //分页
+        PageHelper.startPage(pageNum, pageSize);
+        List<SaleOrder> saleOrders = saleDao.selectAllIsPayFinalSaleOrder();
+        PageInfo<SaleOrder> pageInfo = new PageInfo<SaleOrder>(saleOrders);
+        pageInfo.getList().stream().forEach(saleOrder -> {
+            saleOrder.setSaleOrderDetails(saleDao.selectSaleOrderDetailByOrderNumber(saleOrder.getOrderNumber()));
+        });
+        return pageInfo;
+    }
+
+    public PageInfo<SaleOrder> getIsSuccess(Integer pageNum, Integer pageSize) {
+        //分页
+        PageHelper.startPage(pageNum, pageSize);
+        List<SaleOrder> saleOrders = saleDao.selectAllIsSuccessSaleOrder();
+        PageInfo<SaleOrder> pageInfo = new PageInfo<SaleOrder>(saleOrders);
+        pageInfo.getList().stream().forEach(saleOrder -> {
+            saleOrder.setSaleOrderDetails(saleDao.selectSaleOrderDetailByOrderNumber(saleOrder.getOrderNumber()));
+        });
+        return pageInfo;
+    }
+
 }

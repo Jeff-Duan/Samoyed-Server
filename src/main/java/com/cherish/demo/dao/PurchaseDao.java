@@ -17,4 +17,8 @@ public interface PurchaseDao {
 
     List<PurchaseOrderDetail> selectPurchaseOrderDetailByOrderNumber(String orderNumber);
 
+    List<PurchaseOrder> selectAllToPayPurchaseOrder();
+
+    List<PurchaseOrder> selectAllAlreadyPayPurchaseOrder();
+
 }

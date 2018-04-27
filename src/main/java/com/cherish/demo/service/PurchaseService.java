@@ -65,4 +65,26 @@ public class PurchaseService {
         return pageInfo;
     }
 
+    public PageInfo<PurchaseOrder> getToPay(Integer pageNum, Integer pageSize) {
+        //分页
+        PageHelper.startPage(pageNum, pageSize);
+        List<PurchaseOrder> purchaseOrders = purchaseDao.selectAllToPayPurchaseOrder();
+        PageInfo<PurchaseOrder> pageInfo = new PageInfo<PurchaseOrder>(purchaseOrders);
+        pageInfo.getList().stream().forEach(purchaseOrder -> {
+            purchaseOrder.setPurchaseOrderDetails(purchaseDao.selectPurchaseOrderDetailByOrderNumber(purchaseOrder.getOrderNumber()));
+        });
+        return pageInfo;
+    }
+
+    public PageInfo<PurchaseOrder> getAlreadyPay(Integer pageNum, Integer pageSize) {
+        //分页
+        PageHelper.startPage(pageNum, pageSize);
+        List<PurchaseOrder> purchaseOrders = purchaseDao.selectAllAlreadyPayPurchaseOrder();
+        PageInfo<PurchaseOrder> pageInfo = new PageInfo<PurchaseOrder>(purchaseOrders);
+        pageInfo.getList().stream().forEach(purchaseOrder -> {
+            purchaseOrder.setPurchaseOrderDetails(purchaseDao.selectPurchaseOrderDetailByOrderNumber(purchaseOrder.getOrderNumber()));
+        });
+        return pageInfo;
+    }
+
 }

@@ -115,5 +115,25 @@
         where a.detail_order_number=#{orderNumber}
     </select>
 
+    <select id="selectAllToPayPurchaseOrder" parameterType="String" resultMap="PurchaseOrderResultMap">
+        select * from samoyed_purchase_order a
+        left join samoyed_basic_supplier b on a.order_supplier_id=b.supplier_id
+        left join samoyed_user_user c on a.order_user_id=c.user_id
+        left join samoyed_user_dept d on c.user_dept_id=d.dept_id
+        left join samoyed_user_position e on c.user_position_id= e.position_id
+        left join samoyed_purchase_order_status f on a.order_status_id=f.status_id
+        where a.order_status_id=2
+    </select>
+
+    <select id="selectAllAlreadyPayPurchaseOrder" parameterType="String" resultMap="PurchaseOrderResultMap">
+        select * from samoyed_purchase_order a
+        left join samoyed_basic_supplier b on a.order_supplier_id=b.supplier_id
+        left join samoyed_user_user c on a.order_user_id=c.user_id
+        left join samoyed_user_dept d on c.user_dept_id=d.dept_id
+        left join samoyed_user_position e on c.user_position_id= e.position_id
+        left join samoyed_purchase_order_status f on a.order_status_id=f.status_id
+        where a.order_total_money=order_is_pay_money
+    </select>
+
 
 </mapper>

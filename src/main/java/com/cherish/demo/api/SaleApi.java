@@ -35,7 +35,7 @@ public class SaleApi {
 
     @PostMapping(value = "/apply")
     public Map<String, Object> plan(@RequestParam("data") String data, HttpSession session) {
-        String result = saleService.apply(data,session);
+        String result = saleService.apply(data, session);
         switch (result) {
             case SaleService.RESULT_SUCCESS:
                 return successResult();
@@ -54,5 +54,25 @@ public class SaleApi {
         return pageInfo;
     }
 
+    @GetMapping(value = "/order/isPayDeposit")
+    public PageInfo<SaleOrder> isPayDepositOrder(@RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                                 @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        PageInfo<SaleOrder> pageInfo = saleService.getIsPayDeposit(pageNum, pageSize);
+        return pageInfo;
+    }
+
+    @GetMapping(value = "/order/isPayFinal")
+    public PageInfo<SaleOrder> isPayFinalOrder(@RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                               @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        PageInfo<SaleOrder> pageInfo = saleService.getIsPayFinal(pageNum, pageSize);
+        return pageInfo;
+    }
+
+    @GetMapping(value = "/order/isSuccess")
+    public PageInfo<SaleOrder> isSuccessOrder(@RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                              @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        PageInfo<SaleOrder> pageInfo = saleService.getIsSuccess(pageNum, pageSize);
+        return pageInfo;
+    }
 
 }

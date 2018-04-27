@@ -17,7 +17,7 @@ public class ProduceApi {
     @Autowired
     ProduceService produceService;
 
-    private Map newResult(int code, String status, String message) {
+    private Map result(int code, String status, String message) {
         Map<String, Object> result = new HashMap<>();
         result.put("code", code);
         result.put("status", status);
@@ -26,16 +26,16 @@ public class ProduceApi {
     }
 
     private Map successResult() {
-        return newResult(0, "success", "已提交,请耐心等待审核。");
+        return result(0, "success", "已提交,请耐心等待审核。");
     }
 
     private Map failResult() {
-        return newResult(-1, "fail", "提交失败，请联系服务支持(Cherish-Hui)。");
+        return result(-1, "fail", "提交失败，请联系服务支持(Cherish-Hui)。");
     }
 
     @PostMapping(value = "/plan")
     public Map<String, Object> plan(@RequestParam("data") String data, HttpSession session) {
-        String result = produceService.plan(data,session);
+        String result = produceService.plan(data, session);
         switch (result) {
             case ProduceService.RESULT_SUCCESS:
                 return successResult();

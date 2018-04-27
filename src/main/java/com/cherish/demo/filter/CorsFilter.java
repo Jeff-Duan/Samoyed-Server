@@ -21,12 +21,7 @@ public class CorsFilter extends OncePerRequestFilter {
         response.setHeader("XDomainRequestAllowed", "1");
         response.addHeader("Access-Control-Expose-Headers", "xsrf-token");
         response.setHeader("Access-Control-Max-Age", "3600");
-
-
         //res.setHeader("Access-Control-Allow-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With,userId,token");
-
-
-
         if ("OPTIONS".equals(request.getMethod())) {
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
