@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -26,12 +27,15 @@ public class PurchaseService {
     @Autowired
     PurchaseDao purchaseDao;
 
+    @Autowired
+    Gson gson;
+
     public String apply(String data, HttpSession session) {
         User user;
         //获取登录用户
         try {
-            Optional<User> optional = Optional.ofNullable((User) session.getAttribute("User"));
-            user = optional.orElseThrow(NotFoundException::new);
+            Optional<String> optional = Optional.ofNullable((String) session.getAttribute("User"));
+            user = gson.fromJson(optional.orElseThrow(NotFoundException::new), User.class);
         } catch (NotFoundException e) {
             logger.error("无法从Session获取登录用户.", e);
             return RESULT_ERROR;
@@ -39,7 +43,6 @@ public class PurchaseService {
         //获取随机订单号
         String orderNumber = OrderNumber.getOrderIdByTime();
         //数据转换
-        Gson gson = new Gson();
         PurchaseOrder purchaseOrder = gson.fromJson(data, PurchaseOrder.class);
         //填充订单编号-用户编号-待支付金额
         purchaseOrder.setOrderNumber(orderNumber);
@@ -54,7 +57,13 @@ public class PurchaseService {
         return RESULT_SUCCESS;
     }
 
-    public PageInfo<PurchaseOrder> getAll(String statusId,Integer pageNum, Integer pageSize) {
+    public PurchaseOrder getOne(String orderNumber) {
+        PurchaseOrder purchaseOrder = purchaseDao.selectPurchaseOrderByOrderNumber(orderNumber);
+        purchaseOrder.setPurchaseOrderDetails(purchaseDao.selectPurchaseOrderDetailByOrderNumber(purchaseOrder.getOrderNumber()));
+        return purchaseOrder;
+    }
+
+    public PageInfo<PurchaseOrder> getAll(String statusId, Integer pageNum, Integer pageSize) {
         //分页
         PageHelper.startPage(pageNum, pageSize);
         List<PurchaseOrder> purchaseOrders = purchaseDao.selectAllPurchaseOrder(statusId);
@@ -86,5 +95,41 @@ public class PurchaseService {
         });
         return pageInfo;
     }
+
+    public String audit(String orderNumber) {
+        Optional<PurchaseOrder> purchaseOrderOptional = Optional.ofNullable(getOne(orderNumber));
+        if (purchaseOrderOptional.isPresent() && purchaseOrderOptional.get().getOrderStatusId() == 1) {
+            PurchaseOrder purchaseOrder = new PurchaseOrder();
+            purchaseOrder.setOrderNumber(purchaseOrderOptional.get().getOrderNumber());
+            if (purchaseOrderOptional.get().getOrderPayType() == 1 || purchaseOrderOptional.get().getOrderPayType() == 3) {
+                purchaseOrder.setOrderStatusId(2);
+                purchaseDao.updatePurchaseOrderStatus(purchaseOrder);
+            } else {
+                purchaseOrder.setOrderStatusId(3);
+                purchaseDao.updatePurchaseOrderStatus(purchaseOrder);
+            }
+            return RESULT_SUCCESS;
+        }
+        return RESULT_ERROR;
+    }
+
+    public String batchAudit(String[] orderNumbers) {
+        for (String orderNumber : orderNumbers) {
+            Optional<PurchaseOrder> purchaseOrderOptional = Optional.ofNullable(getOne(orderNumber));
+            if (purchaseOrderOptional.isPresent() && purchaseOrderOptional.get().getOrderStatusId() == 1) {
+                PurchaseOrder purchaseOrder = new PurchaseOrder();
+                purchaseOrder.setOrderNumber(purchaseOrderOptional.get().getOrderNumber());
+                if (purchaseOrderOptional.get().getOrderPayType() == 1 || purchaseOrderOptional.get().getOrderPayType() == 3) {
+                    purchaseOrder.setOrderStatusId(2);
+                    purchaseDao.updatePurchaseOrderStatus(purchaseOrder);
+                } else {
+                    purchaseOrder.setOrderStatusId(3);
+                    purchaseDao.updatePurchaseOrderStatus(purchaseOrder);
+                }
+            }
+        }
+        return RESULT_SUCCESS;
+    }
+
 
 }

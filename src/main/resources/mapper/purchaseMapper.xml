@@ -95,6 +95,23 @@
         #{detailMaterialId},#{detailMaterialPrice},#{detailUnitId},#{detailMaterialNumber} );
     </insert>
 
+    <update id="updatePurchaseOrderStatus" parameterType="com.cherish.demo.entity.purchase.PurchaseOrder">
+        update samoyed_purchase_order set order_status_id= #{orderStatusId} where order_number= #{orderNumber}
+    </update>
+
+    <select id="selectPurchaseOrderByOrderNumber" parameterType="String" resultMap="PurchaseOrderResultMap">
+        select * from samoyed_purchase_order a
+        left join samoyed_basic_supplier b on a.order_supplier_id=b.supplier_id
+        left join samoyed_user_user c on a.order_user_id=c.user_id
+        left join samoyed_user_dept d on c.user_dept_id=d.dept_id
+        left join samoyed_user_position e on c.user_position_id= e.position_id
+        left join samoyed_purchase_order_status f on a.order_status_id=f.status_id
+        where 1=1
+        <if test="_parameter !=null and _parameter !=''">
+            and a.order_number=#{orderNumber}
+        </if>
+    </select>
+
     <select id="selectAllPurchaseOrder" parameterType="String" resultMap="PurchaseOrderResultMap">
         select * from samoyed_purchase_order a
         left join samoyed_basic_supplier b on a.order_supplier_id=b.supplier_id
@@ -108,14 +125,7 @@
         </if>
     </select>
 
-    <select id="selectPurchaseOrderDetailByOrderNumber" parameterType="String" resultMap="PurchaseOrderDetailResultMap">
-        select * from samoyed_purchase_order_detail a
-        left join samoyed_basic_material b on a.detail_material_id=b.material_id
-        left join samoyed_basic_unit c on a.detail_unit_id=c.unit_id
-        where a.detail_order_number=#{orderNumber}
-    </select>
-
-    <select id="selectAllToPayPurchaseOrder" parameterType="String" resultMap="PurchaseOrderResultMap">
+    <select id="selectAllToPayPurchaseOrder" resultMap="PurchaseOrderResultMap">
         select * from samoyed_purchase_order a
         left join samoyed_basic_supplier b on a.order_supplier_id=b.supplier_id
         left join samoyed_user_user c on a.order_user_id=c.user_id
@@ -125,7 +135,7 @@
         where a.order_status_id=2
     </select>
 
-    <select id="selectAllAlreadyPayPurchaseOrder" parameterType="String" resultMap="PurchaseOrderResultMap">
+    <select id="selectAllAlreadyPayPurchaseOrder" resultMap="PurchaseOrderResultMap">
         select * from samoyed_purchase_order a
         left join samoyed_basic_supplier b on a.order_supplier_id=b.supplier_id
         left join samoyed_user_user c on a.order_user_id=c.user_id
@@ -133,6 +143,13 @@
         left join samoyed_user_position e on c.user_position_id= e.position_id
         left join samoyed_purchase_order_status f on a.order_status_id=f.status_id
         where a.order_total_money=order_is_pay_money
+    </select>
+
+    <select id="selectPurchaseOrderDetailByOrderNumber" parameterType="String" resultMap="PurchaseOrderDetailResultMap">
+        select * from samoyed_purchase_order_detail a
+        left join samoyed_basic_material b on a.detail_material_id=b.material_id
+        left join samoyed_basic_unit c on a.detail_unit_id=c.unit_id
+        where a.detail_order_number=#{orderNumber}
     </select>
 
 

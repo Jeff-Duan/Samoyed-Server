@@ -26,12 +26,15 @@ public class SaleService {
     @Autowired
     SaleDao saleDao;
 
+    @Autowired
+    Gson gson;
+
     public String apply(String data, HttpSession session) {
         User user;
         //获取登录用户
         try {
-            Optional<User> optional = Optional.ofNullable((User) session.getAttribute("User"));
-            user = optional.orElseThrow(NotFoundException::new);
+            Optional<String> optional = Optional.ofNullable((String) session.getAttribute("User"));
+            user = gson.fromJson(optional.orElseThrow(NotFoundException::new), User.class);
         } catch (NotFoundException e) {
             logger.error("无法从Session获取登录用户.", e);
             return RESULT_ERROR;
@@ -39,7 +42,6 @@ public class SaleService {
         //获取随机订单号
         String orderNumber = OrderNumber.getOrderIdByTime();
         //数据转换
-        Gson gson = new Gson();
         SaleOrder saleOrder = gson.fromJson(data, SaleOrder.class);
         //填充订单编号-用户编号
         saleOrder.setOrderNumber(orderNumber);
