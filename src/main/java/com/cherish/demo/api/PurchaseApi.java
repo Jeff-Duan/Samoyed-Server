@@ -13,9 +13,6 @@ import java.util.Map;
 @RequestMapping("/api/purchase")
 public class PurchaseApi {
 
-    @Autowired
-    PurchaseService purchaseService;
-
     private Map newResult(int code, String status, String message) {
         Map<String, Object> result = new HashMap<>();
         result.put("code", code);
@@ -25,12 +22,15 @@ public class PurchaseApi {
     }
 
     private Map successResult() {
-        return newResult(0, "success", "成功,请耐心等待审核。");
+        return newResult(0, "success", "操作成功,请耐心等待。");
     }
 
     private Map failResult() {
-        return newResult(-1, "fail", "失败，请联系服务支持(Cherish-Hui)。");
+        return newResult(-1, "fail", "操作失败，请联系服务支持(Cherish-Hui)。");
     }
+
+    @Autowired
+    PurchaseService purchaseService;
 
     @PostMapping(value = "/apply")
     public Map<String, Object> apply(@RequestParam("data") String data, HttpSession session) {

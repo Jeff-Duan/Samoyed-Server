@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace为命名空间，应该是mapper接口的全称-->
+<mapper namespace="com.cherish.demo.dao.FinanceDao">
+
+    <insert id="insertPayRecord" parameterType="com.cherish.demo.entity.finance.PayRecord">
+        insert into
+        samoyed_finance_pay_record(order_number,record_insert_time,record_user_id,record_pay_money)values(#{orderNumber},date(now()),#{recordUserId},#{recordPayMoney})
+    </insert>
+
+    <insert id="insertReceivableRecord" parameterType="com.cherish.demo.entity.finance.ReceivableRecord">
+        insert into
+        samoyed_finance_receivable_record(order_number,record_insert_time,record_user_id,record_receivable_money)values(#{orderNumber},date(now()),#{recordUserId},#{recordReceivableMoney})
+    </insert>
+
+
+</mapper>

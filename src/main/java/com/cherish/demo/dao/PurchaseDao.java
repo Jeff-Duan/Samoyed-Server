@@ -15,6 +15,8 @@ public interface PurchaseDao {
 
     void updatePurchaseOrderStatus(PurchaseOrder purchaseOrder);
 
+    void updatePurchaseOrderMoney(PurchaseOrder purchaseOrder);
+
     PurchaseOrder selectPurchaseOrderByOrderNumber(String orderNumber);
 
     List<PurchaseOrder> selectAllPurchaseOrder(String statusId);

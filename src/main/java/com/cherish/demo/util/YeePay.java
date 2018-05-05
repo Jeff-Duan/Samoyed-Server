@@ -236,19 +236,17 @@ public class YeePay {
 
 	}
 
-	public static String getpayUrl(String orderNumber, String orderPrice,
-			String userId) {
+	public static String getpayUrl(String orderNumber, String orderPrice) {
 
 		String p0_Cmd = "Buy"; // 业务类型:
 		String p1_MerId = "10001126856";// 商户编号:
 		String p2_Order = orderNumber;// 订单编号:
-		String p3_Amt = orderPrice; // 付款金额:
+		String p3_Amt = "0.01"; // 付款金额:
 		String p4_Cur = "CNY"; // 交易币种:
 		String p5_Pid = ""; // 商品名称:
 		String p6_Pcat = ""; // 商品种类:
 		String p7_Pdesc = ""; // 商品描述:
-		String p8_Url = "http://192.168.1.100:8090/ImportObject/user/orderSave?data=4W6u8K7rI4P6X29u37N44W6y7rI4Pl"
-				+ "-" + p2_Order + "-" + userId; // 商户接收支付成功数据的地址:
+		String p8_Url = "http://192.168.1.100:8090/ImportObject/user/orderSave?orderNumber" + p2_Order; // 商户接收支付成功数据的地址:
 		String p9_SAF = ""; // 送货地址:
 		String pa_MP = ""; // 商户扩展信息:
 		String pd_FrpId = "";// 支付通道编码:

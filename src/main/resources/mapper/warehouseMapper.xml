@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace为命名空间，应该是mapper接口的全称-->
+<mapper namespace="com.cherish.demo.dao.WareHouseDao">
+
+    <resultMap id="WareHouseMaterialResultMap" type="com.cherish.demo.entity.warehouse.WareHouseMaterial">
+        <id property="id" column="id"></id>
+        <result property="materialId" column="material_id"></result>
+        <result property="materialNumber" column="material_number"></result>
+    </resultMap>
+
+    <resultMap id="WareHouseProduceResultMap" type="com.cherish.demo.entity.warehouse.WareHouseProduce">
+        <id property="id" column="id"></id>
+        <result property="produceId" column="produce_id"></result>
+        <result property="produceTypeId" column="produce_type_id"></result>
+        <result property="produceNumber" column="produce_number"></result>
+    </resultMap>
+
+    <update id="updateWareHouseMaterial" parameterType="com.cherish.demo.entity.warehouse.WareHouseMaterial">
+        update samoyed_warehouse_material set material_number=#{materialNumber}+material_number where
+        material_id=#{materialId}
+    </update>
+
+
+</mapper>

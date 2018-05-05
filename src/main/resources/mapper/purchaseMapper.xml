@@ -99,6 +99,11 @@
         update samoyed_purchase_order set order_status_id= #{orderStatusId} where order_number= #{orderNumber}
     </update>
 
+    <update id="updatePurchaseOrderMoney" parameterType="com.cherish.demo.entity.purchase.PurchaseOrder">
+        update samoyed_purchase_order set order_is_pay_money= #{orderIsPayMoney},
+        order_to_pay_money=#{orderToPayMoney} where order_number= #{orderNumber}
+    </update>
+
     <select id="selectPurchaseOrderByOrderNumber" parameterType="String" resultMap="PurchaseOrderResultMap">
         select * from samoyed_purchase_order a
         left join samoyed_basic_supplier b on a.order_supplier_id=b.supplier_id

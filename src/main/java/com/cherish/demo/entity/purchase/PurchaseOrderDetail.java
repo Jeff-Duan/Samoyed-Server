@@ -8,7 +8,7 @@ public class PurchaseOrderDetail {
     private String detailOrderNumber;
     private long detailMaterialId;
     private double detailMaterialPrice;
-    private String detailUnitId;
+    private long detailUnitId;
     private double detailMaterialNumber;
 
     private Material material;
@@ -45,11 +45,11 @@ public class PurchaseOrderDetail {
         this.detailMaterialPrice = detailMaterialPrice;
     }
 
-    public String getDetailUnitId() {
+    public long getDetailUnitId() {
         return detailUnitId;
     }
 
-    public void setDetailUnitId(String detailUnitId) {
+    public void setDetailUnitId(long detailUnitId) {
         this.detailUnitId = detailUnitId;
     }
 
