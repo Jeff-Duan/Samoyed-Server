@@ -6,6 +6,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WareHouseDao {
 
-    void updateWareHouseMaterial(WareHouseMaterial wareHouseMaterial);
+    void updateAddWareHouseMaterial(WareHouseMaterial wareHouseMaterial);
+
+    void updateReduceWareHouseMaterial(WareHouseMaterial wareHouseMaterial);
+
+    WareHouseMaterial selectWareHouseMaterial(String materialId);
 
 }

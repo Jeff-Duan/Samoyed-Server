@@ -129,6 +129,23 @@
         ,#{detailMaterialUnitId},#{detailMaterialNumber});
     </insert>
 
+    <update id="updateProduceOrderStatus" parameterType="com.cherish.demo.entity.produce.ProduceOrder">
+        update samoyed_produce_order set order_status_id= #{orderStatusId} where order_number= #{orderNumber}
+    </update>
+
+    <select id="selectProduceOrderByOrderNumber" parameterType="String" resultMap="ProduceOrderResultMap">
+        select * from samoyed_produce_order a
+        left join samoyed_user_user b on a.order_user_id=b.user_id
+        left join samoyed_user_dept c on b.user_dept_id=c.dept_id
+        left join samoyed_user_position d on b.user_position_id= d.position_id
+        left join samoyed_produce_order_status e on a.order_status_id=e.status_id
+        left join samoyed_basic_unit f on a.order_waste_unit_id=f.unit_id
+        where 1=1
+        <if test="_parameter !=null and _parameter !=''">
+            and a.order_number=#{orderNumber}
+        </if>
+    </select>
+
     <select id="selectAllProduceOrder" parameterType="String" resultMap="ProduceOrderResultMap">
         select * from samoyed_produce_order a
         left join samoyed_user_user b on a.order_user_id=b.user_id
@@ -140,6 +157,26 @@
         <if test="_parameter !=0 and _parameter != 0">
             and a.order_status_id=#{statusId}
         </if>
+    </select>
+
+    <select id="selectAllToIssueProduceOrder" resultMap="ProduceOrderResultMap">
+        select * from samoyed_produce_order a
+        left join samoyed_user_user b on a.order_user_id=b.user_id
+        left join samoyed_user_dept c on b.user_dept_id=c.dept_id
+        left join samoyed_user_position d on b.user_position_id= d.position_id
+        left join samoyed_produce_order_status e on a.order_status_id=e.status_id
+        left join samoyed_basic_unit f on a.order_waste_unit_id=f.unit_id
+        where a.order_status_id=2
+    </select>
+
+    <select id="selectAllAlreadyIssueProduceOrder" resultMap="ProduceOrderResultMap">
+        select * from samoyed_produce_order a
+        left join samoyed_user_user b on a.order_user_id=b.user_id
+        left join samoyed_user_dept c on b.user_dept_id=c.dept_id
+        left join samoyed_user_position d on b.user_position_id= d.position_id
+        left join samoyed_produce_order_status e on a.order_status_id=e.status_id
+        left join samoyed_basic_unit f on a.order_waste_unit_id=f.unit_id
+        where a.order_status_id not in (1,2)
     </select>
 
     <select id="selectAllProduceOrderPlanDetailProduceByOrderNumber" parameterType="String"

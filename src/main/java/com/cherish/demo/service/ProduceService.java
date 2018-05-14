@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpSession;
@@ -31,6 +32,7 @@ public class ProduceService {
     @Autowired
     Gson gson;
 
+    @Transactional
     public String plan(String data, HttpSession session) {
         User user;
         //获取登录用户
@@ -57,6 +59,71 @@ public class ProduceService {
         return RESULT_SUCCESS;
     }
 
+    @Transactional
+    public String audit(String orderNumber) {
+        Optional<ProduceOrder> produceOrderOptional = Optional.ofNullable(getOne(orderNumber));
+        if (produceOrderOptional.isPresent() && produceOrderOptional.get().getOrderStatusId() == 1) {
+            ProduceOrder produceOrder = new ProduceOrder();
+            produceOrder.setOrderNumber(produceOrderOptional.get().getOrderNumber());
+            produceOrder.setOrderStatusId(2);
+            produceDao.updateProduceOrderStatus(produceOrder);
+            return RESULT_SUCCESS;
+        }
+        return RESULT_ERROR;
+    }
+
+    public String batchAudit(String[] orderNumbers) {
+        for (String orderNumber : orderNumbers) {
+            String result = audit(orderNumber);
+            if(RESULT_ERROR.equals(result)){
+                return RESULT_ERROR;
+            }
+        }
+        return RESULT_SUCCESS;
+    }
+
+    @Transactional
+    public String income(String orderNumber) {
+        Optional<ProduceOrder> produceOrderOptional = Optional.ofNullable(getOne(orderNumber));
+        if (produceOrderOptional.isPresent() && produceOrderOptional.get().getOrderStatusId() == 3) {
+            ProduceOrder produceOrder = new ProduceOrder();
+            produceOrder.setOrderNumber(produceOrderOptional.get().getOrderNumber());
+            produceOrder.setOrderStatusId(4);
+            produceDao.updateProduceOrderStatus(produceOrder);
+            return RESULT_SUCCESS;
+        }
+        return RESULT_ERROR;
+    }
+
+    public String batchIncome(String[] orderNumbers) {
+        for (String orderNumber : orderNumbers) {
+            String result = income(orderNumber);
+            if(RESULT_ERROR.equals(result)){
+                return RESULT_ERROR;
+            }
+        }
+        return RESULT_SUCCESS;
+    }
+
+    public ProduceOrder getOne(String orderNumber) {
+        ProduceOrder produceOrder = produceDao.selectProduceOrderByOrderNumber(orderNumber);
+        //填充计划明细
+        List<ProduceOrderPlanDetail> planDetailList1 = produceDao.selectAllProduceOrderPlanDetailProduceByOrderNumber(produceOrder.getOrderNumber());
+        List<ProduceOrderPlanDetail> planDetailList2 = produceDao.selectAllProduceOrderPlanDetailMaterialByOrderNumber(produceOrder.getOrderNumber());
+        planDetailList1.stream().forEach(produceOrderPlanDetail1 -> {
+            planDetailList2.stream().forEach(produceOrderPlanDetail2 -> {
+                if (!StringUtils.isEmpty(produceOrderPlanDetail1.getDetailId()) && !StringUtils.isEmpty(produceOrderPlanDetail2.getDetailId()) && produceOrderPlanDetail1.getDetailId() == produceOrderPlanDetail2.getDetailId()) {
+                    produceOrderPlanDetail1.setMaterial(produceOrderPlanDetail2.getMaterial());
+                    produceOrderPlanDetail1.setMaterialUnit(produceOrderPlanDetail2.getMaterialUnit());
+                }
+            });
+        });
+        produceOrder.setProduceOrderPlanDetails(planDetailList1);
+        //填充生产明细
+        produceOrder.setProduceOrderActualDetails(produceDao.selectAllProduceOrderActualDetailByOrderNumber(produceOrder.getOrderNumber()));
+        return produceOrder;
+    }
+
     public PageInfo<ProduceOrder> getAll(String statusId, Integer pageNum, Integer pageSize) {
         //分页
         PageHelper.startPage(pageNum, pageSize);
@@ -69,7 +136,57 @@ public class ProduceService {
             List<ProduceOrderPlanDetail> planDetailList2 = produceDao.selectAllProduceOrderPlanDetailMaterialByOrderNumber(produceOrder.getOrderNumber());
             planDetailList1.stream().forEach(produceOrderPlanDetail1 -> {
                 planDetailList2.stream().forEach(produceOrderPlanDetail2 -> {
-                    if (!StringUtils.isEmpty(produceOrderPlanDetail1.getDetailOrderNumber()) && !StringUtils.isEmpty(produceOrderPlanDetail2.getDetailOrderNumber()) && produceOrderPlanDetail1.getDetailOrderNumber().equals(produceOrderPlanDetail2.getDetailOrderNumber())) {
+                    if (!StringUtils.isEmpty(produceOrderPlanDetail1.getDetailId()) && !StringUtils.isEmpty(produceOrderPlanDetail2.getDetailId()) && produceOrderPlanDetail1.getDetailId() == produceOrderPlanDetail2.getDetailId()) {
+                        produceOrderPlanDetail1.setMaterial(produceOrderPlanDetail2.getMaterial());
+                        produceOrderPlanDetail1.setMaterialUnit(produceOrderPlanDetail2.getMaterialUnit());
+                    }
+                });
+            });
+            produceOrder.setProduceOrderPlanDetails(planDetailList1);
+            //填充生产明细
+            produceOrder.setProduceOrderActualDetails(produceDao.selectAllProduceOrderActualDetailByOrderNumber(produceOrder.getOrderNumber()));
+        });
+        return pageInfo;
+    }
+
+    public PageInfo<ProduceOrder> getToIssue(Integer pageNum, Integer pageSize) {
+        //分页
+        PageHelper.startPage(pageNum, pageSize);
+        //填充订单
+        List<ProduceOrder> produceOrders = produceDao.selectAllToIssueProduceOrder();
+        PageInfo<ProduceOrder> pageInfo = new PageInfo<ProduceOrder>(produceOrders);
+        pageInfo.getList().stream().forEach(produceOrder -> {
+            //填充计划明细
+            List<ProduceOrderPlanDetail> planDetailList1 = produceDao.selectAllProduceOrderPlanDetailProduceByOrderNumber(produceOrder.getOrderNumber());
+            List<ProduceOrderPlanDetail> planDetailList2 = produceDao.selectAllProduceOrderPlanDetailMaterialByOrderNumber(produceOrder.getOrderNumber());
+            planDetailList1.stream().forEach(produceOrderPlanDetail1 -> {
+                planDetailList2.stream().forEach(produceOrderPlanDetail2 -> {
+                    if (!StringUtils.isEmpty(produceOrderPlanDetail1.getDetailId()) && !StringUtils.isEmpty(produceOrderPlanDetail2.getDetailId()) && produceOrderPlanDetail1.getDetailId() == produceOrderPlanDetail2.getDetailId()) {
+                        produceOrderPlanDetail1.setMaterial(produceOrderPlanDetail2.getMaterial());
+                        produceOrderPlanDetail1.setMaterialUnit(produceOrderPlanDetail2.getMaterialUnit());
+                    }
+                });
+            });
+            produceOrder.setProduceOrderPlanDetails(planDetailList1);
+            //填充生产明细
+            produceOrder.setProduceOrderActualDetails(produceDao.selectAllProduceOrderActualDetailByOrderNumber(produceOrder.getOrderNumber()));
+        });
+        return pageInfo;
+    }
+
+    public PageInfo<ProduceOrder> getAlreadyIssue(Integer pageNum, Integer pageSize) {
+        //分页
+        PageHelper.startPage(pageNum, pageSize);
+        //填充订单
+        List<ProduceOrder> purchaseOrders = produceDao.selectAllAlreadyIssueProduceOrder();
+        PageInfo<ProduceOrder> pageInfo = new PageInfo<ProduceOrder>(purchaseOrders);
+        pageInfo.getList().stream().forEach(produceOrder -> {
+            //填充计划明细
+            List<ProduceOrderPlanDetail> planDetailList1 = produceDao.selectAllProduceOrderPlanDetailProduceByOrderNumber(produceOrder.getOrderNumber());
+            List<ProduceOrderPlanDetail> planDetailList2 = produceDao.selectAllProduceOrderPlanDetailMaterialByOrderNumber(produceOrder.getOrderNumber());
+            planDetailList1.stream().forEach(produceOrderPlanDetail1 -> {
+                planDetailList2.stream().forEach(produceOrderPlanDetail2 -> {
+                    if (!StringUtils.isEmpty(produceOrderPlanDetail1.getDetailId()) && !StringUtils.isEmpty(produceOrderPlanDetail2.getDetailId()) && produceOrderPlanDetail1.getDetailId() == produceOrderPlanDetail2.getDetailId()) {
                         produceOrderPlanDetail1.setMaterial(produceOrderPlanDetail2.getMaterial());
                         produceOrderPlanDetail1.setMaterialUnit(produceOrderPlanDetail2.getMaterialUnit());
                     }

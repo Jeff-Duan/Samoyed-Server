@@ -46,11 +46,77 @@ public class ProduceApi {
         }
     }
 
+    @PostMapping(value = "/audit")
+    public Map audit(@RequestParam("orderNumber") String orderNumber) {
+        String result = produceService.audit(orderNumber);
+        switch (result) {
+            case ProduceService.RESULT_SUCCESS:
+                return successResult();
+            case ProduceService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @PostMapping(value = "/batchAudit")
+    public Map batchAudit(@RequestParam("orderNumbers[]") String[] orderNumbers) {
+        String result = produceService.batchAudit(orderNumbers);
+        switch (result) {
+            case ProduceService.RESULT_SUCCESS:
+                return successResult();
+            case ProduceService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @PostMapping(value = "/income")
+    public Map income(@RequestParam("orderNumber") String orderNumber) {
+        String result = produceService.income(orderNumber);
+        switch (result) {
+            case ProduceService.RESULT_SUCCESS:
+                return successResult();
+            case ProduceService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @PostMapping(value = "/batchIncome")
+    public Map batchIncome(@RequestParam("orderNumbers[]") String[] orderNumbers) {
+        String result = produceService.batchIncome(orderNumbers);
+        switch (result) {
+            case ProduceService.RESULT_SUCCESS:
+                return successResult();
+            case ProduceService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
     @GetMapping(value = "/order/all")
     public PageInfo<ProduceOrder> allOrder(@RequestParam(value = "statusId", required = false, defaultValue = "0") String statusId,
                                            @RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
                                            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
         PageInfo<ProduceOrder> pageInfo = produceService.getAll(statusId, pageNum, pageSize);
+        return pageInfo;
+    }
+
+    @GetMapping(value = "/order/toIssue")
+    public PageInfo<ProduceOrder> toIssueOrder(@RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                               @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        PageInfo<ProduceOrder> pageInfo = produceService.getToIssue(pageNum, pageSize);
+        return pageInfo;
+    }
+
+    @GetMapping(value = "/order/alreadyIssue")
+    public PageInfo<ProduceOrder> alreadyIssueOrder(@RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                                    @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        PageInfo<ProduceOrder> pageInfo = produceService.getAlreadyIssue(pageNum, pageSize);
         return pageInfo;
     }
 

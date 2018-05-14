@@ -24,15 +24,21 @@ public class WareHouseApi {
     }
 
     private Map successResult() {
-        return newResult(0, "success", "操作成功,请耐心等待。");
+        return newResult(0, "success", "操作成功,请耐心等待.");
     }
 
     private Map failResult() {
-        return newResult(-1, "fail", "操作失败，请联系服务支持(Cherish-Hui)。");
+        return newResult(-1, "fail", "操作失败,请联系服务支持(Cherish-Hui).");
     }
+
+    private Map notEnoughResult() { return newResult(1, "not_enough", "操作终止,库存不足."); }
 
     @Autowired
     WareHouseService wareHouseService;
+
+    /*
+     * 仓储入库-采购
+     * */
 
     @PostMapping(value = "/purchaseDelivery")
     public Map<String, Object> purchaseDelivery(@RequestParam("orderNumber") String orderNumber) {
@@ -135,6 +141,36 @@ public class WareHouseApi {
                 return failResult();
             default:
                 return failResult();
+        }
+    }
+
+    /*
+     *仓储出库-生产
+     */
+
+    @PostMapping(value = "/produceIssue")
+    public Map<String, Object> produceIssue(@RequestParam("orderNumber") String orderNumber) {
+        String result = wareHouseService.produceIssue(orderNumber);
+        switch (result) {
+            case WareHouseService.RESULT_SUCCESS:
+                return successResult();
+            case WareHouseService.RESULT_NOT_ENOUGH:
+                return notEnoughResult();
+            default:
+                return notEnoughResult();
+        }
+    }
+
+    @PostMapping(value = "/produceBatchIssue")
+    public Map<String, Object> produceBatchIssue(@RequestParam("orderNumbers[]") String[] orderNumbers) {
+        String result = wareHouseService.produceBatchIssue(orderNumbers);
+        switch (result) {
+            case WareHouseService.RESULT_SUCCESS:
+                return successResult();
+            case WareHouseService.RESULT_NOT_ENOUGH:
+                return notEnoughResult();
+            default:
+                return notEnoughResult();
         }
     }
 

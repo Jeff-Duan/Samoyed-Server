@@ -14,7 +14,15 @@ public interface ProduceDao {
 
     void insertProduceOrderPlanDetail(ProduceOrderPlanDetail produceOrderPlanDetail);
 
+    void updateProduceOrderStatus(ProduceOrder produceOrder);
+
+    ProduceOrder selectProduceOrderByOrderNumber(String orderNumber);
+
     List<ProduceOrder> selectAllProduceOrder(String statusId);
+
+    List<ProduceOrder> selectAllToIssueProduceOrder();
+
+    List<ProduceOrder> selectAllAlreadyIssueProduceOrder();
 
     List<ProduceOrderPlanDetail> selectAllProduceOrderPlanDetailProduceByOrderNumber(String orderNumber);
 
