@@ -46,6 +46,32 @@ public class SaleApi {
         }
     }
 
+    @PostMapping(value = "/audit")
+    public Map audit(@RequestParam("orderNumber") String orderNumber) {
+        String result = saleService.audit(orderNumber);
+        switch (result) {
+            case SaleService.RESULT_SUCCESS:
+                return successResult();
+            case SaleService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @PostMapping(value = "/batchAudit")
+    public Map batchAudit(@RequestParam("orderNumbers[]") String[] orderNumbers) {
+        String result = saleService.batchAudit(orderNumbers);
+        switch (result) {
+            case SaleService.RESULT_SUCCESS:
+                return successResult();
+            case SaleService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
     @GetMapping(value = "/order/all")
     public PageInfo<SaleOrder> allOrder(@RequestParam(value = "statusId", required = false, defaultValue = "0") String statusId,
                                         @RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,

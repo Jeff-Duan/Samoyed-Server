@@ -7,70 +7,70 @@
 <mapper namespace="com.cherish.demo.dao.SaleDao">
 
     <resultMap id="SaleOrderResultMap" type="com.cherish.demo.entity.sale.SaleOrder">
-        <id property="orderId" column="order_id"></id>
-        <result property="orderNumber" column="order_number"></result>
-        <result property="orderInsertTime" column="order_insert_time"></result>
-        <result property="orderReceivableTime" column="order_receivable_time"></result>
-        <result property="orderSendTime" column="order_send_time"></result>
-        <result property="orderDeliveryAddress" column="order_delivery_address"></result>
-        <result property="orderTotalMoney" column="order_total_money"></result>
-        <result property="orderDepositMoney" column="order_deposit_money"></result>
-        <result property="orderRemark" column="order_remark"></result>
-        <result property="orderUserId" column="order_user_id"></result>
-        <result property="orderStatusId" column="order_status_id"></result>
-        <result property="orderIsReceivableMoney" column="order_is_pay_money"></result>
-        <result property="orderToReceivableMoney" column="order_to_receivable_money"></result>
+        <id property="orderId" column="order_id"/>
+        <result property="orderNumber" column="order_number"/>
+        <result property="orderInsertTime" column="order_insert_time"/>
+        <result property="orderReceivableTime" column="order_receivable_time"/>
+        <result property="orderSendTime" column="order_send_time"/>
+        <result property="orderDeliveryAddress" column="order_delivery_address"/>
+        <result property="orderTotalMoney" column="order_total_money"/>
+        <result property="orderDepositMoney" column="order_deposit_money"/>
+        <result property="orderRemark" column="order_remark"/>
+        <result property="orderUserId" column="order_user_id"/>
+        <result property="orderStatusId" column="order_status_id"/>
+        <result property="orderIsReceivableMoney" column="order_is_receivable_money"/>
+        <result property="orderToReceivableMoney" column="order_to_receivable_money"/>
         <association property="saleOrderStatus" javaType="com.cherish.demo.entity.sale.SaleOrderStatus">
-            <id property="statusId" column="status_id"></id>
-            <result property="statusName" column="status_name"></result>
+            <id property="statusId" column="status_id"/>
+            <result property="statusName" column="status_name"/>
         </association>
         <association property="user" javaType="com.cherish.demo.entity.user.User">
-            <id property="userId" column="user_id"></id>
-            <result property="userName" column="user_name"></result>
-            <result property="userEnglishName" column="user_english_name"></result>
-            <result property="userPassword" column="user_password"></result>
-            <result property="userSex" column="user_sex"></result>
-            <result property="userBirth" column="user_birth"></result>
-            <result property="userOriginProvince" column="user_origin_province"></result>
-            <result property="userOriginCity" column="user_origin_city"></result>
-            <result property="userOriginArea" column="user_origin_area"></result>
-            <result property="userTel" column="user_tel"></result>
-            <result property="userStatus" column="user_status"></result>
-            <result property="userEntryTime" column="user_entry_time"></result>
-            <result property="userQuitTime" column="user_quit_time"></result>
-            <result property="userDeptId" column="user_dept_id"></result>
-            <result property="userPositionId" column="user_position_id"></result>
+            <id property="userId" column="user_id"/>
+            <result property="userName" column="user_name"/>
+            <result property="userEnglishName" column="user_english_name"/>
+            <result property="userPassword" column="user_password"/>
+            <result property="userSex" column="user_sex"/>
+            <result property="userBirth" column="user_birth"/>
+            <result property="userOriginProvince" column="user_origin_province"/>
+            <result property="userOriginCity" column="user_origin_city"/>
+            <result property="userOriginArea" column="user_origin_area"/>
+            <result property="userTel" column="user_tel"/>
+            <result property="userStatus" column="user_status"/>
+            <result property="userEntryTime" column="user_entry_time"/>
+            <result property="userQuitTime" column="user_quit_time"/>
+            <result property="userDeptId" column="user_dept_id"/>
+            <result property="userPositionId" column="user_position_id"/>
             <association property="dept" javaType="com.cherish.demo.entity.user.Dept">
-                <id property="deptId" column="dept_id"></id>
-                <result property="deptName" column="dept_name"></result>
+                <id property="deptId" column="dept_id"/>
+                <result property="deptName" column="dept_name"/>
             </association>
             <association property="position" javaType="com.cherish.demo.entity.user.Position">
-                <id property="positionId" column="position_id"></id>
-                <result property="positionName" column="position_name"></result>
+                <id property="positionId" column="position_id"/>
+                <result property="positionName" column="position_name"/>
             </association>
         </association>
     </resultMap>
 
     <resultMap id="SaleOrderDetailResultMap" type="com.cherish.demo.entity.sale.SaleOrderDetail">
-        <id property="detailId" column="detail_id"></id>
-        <result property="detailOrderNumber" column="detail_order_number"></result>
-        <result property="detailProduceId" column="detail_produce_id"></result>
-        <result property="detailProduceTypeId" column="detail_produce_type_id"></result>
-        <result property="detailProducePrice" column="detail_produce_price"></result>
-        <result property="detailProduceUnitId" column="detail_produce_unit_id"></result>
-        <result property="detailProduceNumber" column="detail_produce_number"></result>
+        <id property="detailId" column="detail_id"/>
+        <result property="detailOrderNumber" column="detail_order_number"/>
+        <result property="detailProduceId" column="detail_produce_id"/>
+        <result property="detailProduceTypeId" column="detail_produce_type_id"/>
+        <result property="detailProducePrice" column="detail_produce_price"/>
+        <result property="detailProduceUnitId" column="detail_produce_unit_id"/>
+        <result property="detailProduceNumber" column="detail_produce_number"/>
         <association property="produce" javaType="com.cherish.demo.entity.basic.Produce">
-            <id property="produceId" column="produce_id"></id>
-            <result property="produceName" column="produce_name"></result>
-            <result property="produceMaterialId" column="produce_material_id"></result>
+            <id property="produceId" column="produce_id"/>
+            <result property="produceName" column="produce_name"/>
+            <result property="produceMaterialId" column="produce_material_id"/>
         </association>
         <association property="produceType" javaType="com.cherish.demo.entity.basic.ProduceType">
-            <id property="produceTypeId" column="produce_type_id"></id>
-            <result property="produceTypeName" column="produce_type_name"></result>
+            <id property="produceTypeId" column="produce_type_id"/>
+            <result property="produceTypeName" column="produce_type_name"/>
         </association>
         <association property="unit" javaType="com.cherish.demo.entity.basic.Unit">
-            <id property="unitId" column="unit_id"></id>
-            <result property="unitName" column="unit_name"></result>
+            <id property="unitId" column="unit_id"/>
+            <result property="unitName" column="unit_name"/>
         </association>
     </resultMap>
 
@@ -89,6 +89,27 @@
         #{detailOrderNumber},#{detailProduceId},#{detailProduceTypeId},#{detailProducePrice},#{detailProduceUnitId}
         ,#{detailProduceNumber});
     </insert>
+
+    <update id="updateSaleOrderStatus" parameterType="com.cherish.demo.entity.sale.SaleOrder">
+        update samoyed_sale_order set order_status_id= #{orderStatusId} where order_number= #{orderNumber}
+    </update>
+
+    <update id="updateSaleOrderMoney" parameterType="com.cherish.demo.entity.sale.SaleOrder">
+        update samoyed_sale_order set order_is_receivable_money= #{orderIsReceivableMoney},
+        order_to_receivable_money=#{orderToReceivableMoney} where order_number= #{orderNumber}
+    </update>
+
+    <select id="selectSaleOrderByOrderNumber" parameterType="String" resultMap="SaleOrderResultMap">
+        select * from samoyed_sale_order a
+        left join samoyed_user_user b on a.order_user_id=b.user_id
+        left join samoyed_user_dept c on b.user_dept_id=c.dept_id
+        left join samoyed_user_position d on b.user_position_id= d.position_id
+        left join samoyed_purchase_order_status e on a.order_status_id=e.status_id
+        where 1=1
+        <if test="_parameter !=0 and _parameter != 0">
+            and a.order_number=#{orderNumber}
+        </if>
+    </select>
 
     <select id="selectAllSaleOrder" parameterType="String" resultMap="SaleOrderResultMap">
         select * from samoyed_sale_order a
@@ -134,7 +155,7 @@
         left join samoyed_user_dept c on b.user_dept_id=c.dept_id
         left join samoyed_user_position d on b.user_position_id= d.position_id
         left join samoyed_purchase_order_status e on a.order_status_id=e.status_id
-        where a.order_status_id=5
+        where a.order_total_money=a.order_is_receivable_money
     </select>
 
 

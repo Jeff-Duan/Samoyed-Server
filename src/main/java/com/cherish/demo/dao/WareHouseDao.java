@@ -14,8 +14,12 @@ public interface WareHouseDao {
 
     void updateAddWareHouseProduce(WareHouseProduce wareHouseProduce);
 
+    void updateReduceWareHouseProduce(WareHouseProduce wareHouseProduce);
+
     void updateAddWareHouseWaste(WareHouseWaste wareHouseWaste);
 
     WareHouseMaterial selectWareHouseMaterial(String materialId);
+
+    WareHouseProduce selectWareHouseProduce(WareHouseProduce wareHouseProduce);
 
 }

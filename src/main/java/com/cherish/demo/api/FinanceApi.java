@@ -60,4 +60,30 @@ public class FinanceApi {
         }
     }
 
+    @PostMapping(value = "/saleReceivable")
+    public Map<String, Object> saleReceivable(@RequestParam("orderNumber") String orderNumber, HttpSession session) {
+        String result = financeService.saleReceivable(orderNumber,session);
+        switch (result) {
+            case FinanceService.RESULT_SUCCESS:
+                return successResult();
+            case FinanceService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @PostMapping(value = "/salePay")
+    public Map<String, Object> salePay(@RequestParam("orderNumber") String orderNumber, HttpSession session) {
+        String result = financeService.salePay(orderNumber,session);
+        switch (result) {
+            case FinanceService.RESULT_SUCCESS:
+                return successResult();
+            case FinanceService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
 }

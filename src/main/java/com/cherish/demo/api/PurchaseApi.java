@@ -45,28 +45,6 @@ public class PurchaseApi {
         }
     }
 
-    @GetMapping(value = "/order/all")
-    public PageInfo<PurchaseOrder> allOrder(@RequestParam(value = "statusId", required = false, defaultValue = "0") String statusId,
-                                            @RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
-                                            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
-        PageInfo<PurchaseOrder> pageInfo = purchaseService.getAll(statusId, pageNum, pageSize);
-        return pageInfo;
-    }
-
-    @GetMapping(value = "/order/toPay")
-    public PageInfo<PurchaseOrder> toPayOrder(@RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
-                                              @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
-        PageInfo<PurchaseOrder> pageInfo = purchaseService.getToPay(pageNum, pageSize);
-        return pageInfo;
-    }
-
-    @GetMapping(value = "/order/alreadyPay")
-    public PageInfo<PurchaseOrder> alreadyPay(@RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
-                                              @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
-        PageInfo<PurchaseOrder> pageInfo = purchaseService.getAlreadyPay(pageNum, pageSize);
-        return pageInfo;
-    }
-
     @PostMapping(value = "/audit")
     public Map audit(@RequestParam("orderNumber") String orderNumber) {
         String result = purchaseService.audit(orderNumber);
@@ -93,5 +71,26 @@ public class PurchaseApi {
         }
     }
 
+    @GetMapping(value = "/order/all")
+    public PageInfo<PurchaseOrder> allOrder(@RequestParam(value = "statusId", required = false, defaultValue = "0") String statusId,
+                                            @RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        PageInfo<PurchaseOrder> pageInfo = purchaseService.getAll(statusId, pageNum, pageSize);
+        return pageInfo;
+    }
+
+    @GetMapping(value = "/order/toPay")
+    public PageInfo<PurchaseOrder> toPayOrder(@RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                              @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        PageInfo<PurchaseOrder> pageInfo = purchaseService.getToPay(pageNum, pageSize);
+        return pageInfo;
+    }
+
+    @GetMapping(value = "/order/alreadyPay")
+    public PageInfo<PurchaseOrder> alreadyPay(@RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                              @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        PageInfo<PurchaseOrder> pageInfo = purchaseService.getAlreadyPay(pageNum, pageSize);
+        return pageInfo;
+    }
 
 }

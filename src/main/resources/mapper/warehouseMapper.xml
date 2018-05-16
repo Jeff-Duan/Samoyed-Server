@@ -39,12 +39,21 @@
         produce_id=#{produceId} and produce_type_id=#{produceTypeId}
     </update>
 
+    <update id="updateReduceWareHouseProduce" parameterType="com.cherish.demo.entity.warehouse.WareHouseProduce">
+        update samoyed_warehouse_produce set produce_number=produce_number-#{produceNumber} where
+        produce_id=#{produceId} and produce_type_id=#{produceTypeId}
+    </update>
+
     <update id="updateAddWareHouseWaste" parameterType="com.cherish.demo.entity.warehouse.WareHouseWaste">
         update samoyed_warehouse_waste set waste_number=#{wasteNumber}+waste_number
     </update>
 
     <select id="selectWareHouseMaterial" parameterType="String" resultMap="WareHouseMaterialResultMap">
         select * from samoyed_warehouse_material where material_id=#{materialId}
+    </select>
+
+    <select id="selectWareHouseProduce" parameterType="com.cherish.demo.entity.warehouse.WareHouseProduce" resultMap="WareHouseProduceResultMap">
+        select * from samoyed_warehouse_produce where produce_id=#{produceId} and produce_type_id=#{produceTypeId}
     </select>
 
 

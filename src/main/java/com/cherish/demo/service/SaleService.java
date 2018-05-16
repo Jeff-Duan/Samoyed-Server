@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -29,6 +30,7 @@ public class SaleService {
     @Autowired
     Gson gson;
 
+    @Transactional
     public String apply(String data, HttpSession session) {
         User user;
         //获取登录用户
@@ -53,6 +55,38 @@ public class SaleService {
             saleDao.insertSaleOrderDetail(saleOrderDetail);
         });
         return RESULT_SUCCESS;
+    }
+
+    @Transactional
+    public String audit(String orderNumber) {
+        Optional<SaleOrder> saleOrderOptional = Optional.ofNullable(getOne(orderNumber));
+        if (saleOrderOptional.isPresent() && saleOrderOptional.get().getOrderStatusId() == 1) {
+            SaleOrder saleOrder = new SaleOrder();
+            saleOrder.setOrderNumber(saleOrderOptional.get().getOrderNumber());
+            saleOrder.setOrderStatusId(2);
+                saleDao.updateSaleOrderStatus(saleOrder);
+            return RESULT_SUCCESS;
+        }
+        return RESULT_ERROR;
+    }
+
+    public String batchAudit(String[] orderNumbers) {
+        for (String orderNumber : orderNumbers) {
+            String result = audit(orderNumber);
+            if(RESULT_ERROR.equals(result)){
+                return RESULT_ERROR;
+            }
+        }
+        return RESULT_SUCCESS;
+    }
+
+
+
+
+    public SaleOrder getOne(String orderNumber){
+        SaleOrder saleOrder = saleDao.selectSaleOrderByOrderNumber(orderNumber);
+        saleOrder.setSaleOrderDetails(saleDao.selectSaleOrderDetailByOrderNumber(saleOrder.getOrderNumber()));
+        return saleOrder;
     }
 
     public PageInfo<SaleOrder> getAll(String statusId, Integer pageNum, Integer pageSize) {

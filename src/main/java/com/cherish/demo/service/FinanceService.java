@@ -2,9 +2,11 @@ package com.cherish.demo.service;
 
 import com.cherish.demo.dao.FinanceDao;
 import com.cherish.demo.dao.PurchaseDao;
+import com.cherish.demo.dao.SaleDao;
 import com.cherish.demo.entity.finance.PayRecord;
 import com.cherish.demo.entity.finance.ReceivableRecord;
 import com.cherish.demo.entity.purchase.PurchaseOrder;
+import com.cherish.demo.entity.sale.SaleOrder;
 import com.cherish.demo.entity.user.User;
 import com.cherish.demo.exception.NotFoundException;
 import com.google.gson.Gson;
@@ -26,7 +28,13 @@ public class FinanceService {
     PurchaseService purchaseService;
 
     @Autowired
+    SaleService saleService;
+
+    @Autowired
     PurchaseDao purchaseDao;
+
+    @Autowired
+    SaleDao saleDao;
 
     @Autowired
     FinanceDao financeDao;
@@ -153,5 +161,83 @@ public class FinanceService {
         return RESULT_ERROR;
     }
 
+    /*
+     * 财务收款-销售
+     * */
+
+    public String saleReceivable(String orderNumber, HttpSession session) {
+        User user;
+        SaleOrder saleOrder = new SaleOrder();
+        ReceivableRecord receivableRecord = new ReceivableRecord();
+        //获取登录用户
+        try {
+            Optional<String> optional = Optional.ofNullable((String) session.getAttribute("User"));
+            user = gson.fromJson(optional.orElseThrow(NotFoundException::new), User.class);
+        } catch (NotFoundException e) {
+            logger.error("无法从Session获取登录用户.", e);
+            return RESULT_ERROR;
+        }
+        Optional<SaleOrder> saleOrderOptional = Optional.ofNullable(saleService.getOne(orderNumber));
+        if (saleOrderOptional.isPresent()) {
+            if (saleOrderOptional.get().getOrderStatusId() == 2) {
+                //收取定金
+                saleOrder.setOrderNumber(saleOrderOptional.get().getOrderNumber());
+                saleOrder.setOrderIsReceivableMoney(saleOrderOptional.get().getOrderDepositMoney());
+                saleOrder.setOrderToReceivableMoney(saleOrderOptional.get().getOrderTotalMoney() - saleOrderOptional.get().getOrderDepositMoney());
+                saleOrder.setOrderStatusId(3);
+                receivableRecord.setOrderNumber(saleOrderOptional.get().getOrderNumber());
+                receivableRecord.setRecordUserId(user.getUserId());
+                receivableRecord.setRecordReceivableMoney(saleOrderOptional.get().getOrderDepositMoney());
+            }
+            if (saleOrderOptional.get().getOrderStatusId() == 4) {
+                //支付尾款
+                saleOrder.setOrderNumber(saleOrderOptional.get().getOrderNumber());
+                saleOrder.setOrderIsReceivableMoney(saleOrderOptional.get().getOrderTotalMoney());
+                saleOrder.setOrderToReceivableMoney(0.00);
+                saleOrder.setOrderStatusId(6);
+                receivableRecord.setOrderNumber(saleOrderOptional.get().getOrderNumber());
+                receivableRecord.setRecordUserId(user.getUserId());
+                receivableRecord.setRecordReceivableMoney(saleOrderOptional.get().getOrderTotalMoney() - saleOrderOptional.get().getOrderDepositMoney());
+            }
+            saleDao.updateSaleOrderMoney(saleOrder);
+            saleDao.updateSaleOrderStatus(saleOrder);
+            financeDao.insertReceivableRecord(receivableRecord);
+            return RESULT_SUCCESS;
+        }
+        return RESULT_ERROR;
+    }
+
+    /*
+     * 财务付款-销售
+     * */
+
+    public String salePay(String orderNumber, HttpSession session) {
+        User user;
+        SaleOrder saleOrder = new SaleOrder();
+        PayRecord payRecord = new PayRecord();
+        //获取登录用户
+        try {
+            Optional<String> optional = Optional.ofNullable((String) session.getAttribute("User"));
+            user = gson.fromJson(optional.orElseThrow(NotFoundException::new), User.class);
+        } catch (NotFoundException e) {
+            logger.error("无法从Session获取登录用户.", e);
+            return RESULT_ERROR;
+        }
+        Optional<SaleOrder> saleOrderOptional = Optional.ofNullable(saleService.getOne(orderNumber));
+        if (saleOrderOptional.isPresent()) {
+            saleOrder.setOrderNumber(saleOrderOptional.get().getOrderNumber());
+            saleOrder.setOrderIsReceivableMoney(0.00);
+            saleOrder.setOrderToReceivableMoney(saleOrderOptional.get().getOrderTotalMoney());
+            saleOrder.setOrderStatusId(7);
+            payRecord.setOrderNumber(saleOrderOptional.get().getOrderNumber());
+            payRecord.setRecordUserId(user.getUserId());
+            payRecord.setRecordPayMoney(saleOrderOptional.get().getOrderDepositMoney());
+            saleDao.updateSaleOrderMoney(saleOrder);
+            saleDao.updateSaleOrderStatus(saleOrder);
+            financeDao.insertPayRecord(payRecord);
+            return RESULT_SUCCESS;
+        }
+        return RESULT_ERROR;
+    }
 
 }

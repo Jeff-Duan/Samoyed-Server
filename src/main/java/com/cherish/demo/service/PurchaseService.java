@@ -57,6 +57,41 @@ public class PurchaseService {
         return RESULT_SUCCESS;
     }
 
+    public String audit(String orderNumber) {
+        Optional<PurchaseOrder> purchaseOrderOptional = Optional.ofNullable(getOne(orderNumber));
+        if (purchaseOrderOptional.isPresent() && purchaseOrderOptional.get().getOrderStatusId() == 1) {
+            PurchaseOrder purchaseOrder = new PurchaseOrder();
+            purchaseOrder.setOrderNumber(purchaseOrderOptional.get().getOrderNumber());
+            if (purchaseOrderOptional.get().getOrderPayType() == 1 || purchaseOrderOptional.get().getOrderPayType() == 3) {
+                purchaseOrder.setOrderStatusId(2);
+                purchaseDao.updatePurchaseOrderStatus(purchaseOrder);
+            } else {
+                purchaseOrder.setOrderStatusId(3);
+                purchaseDao.updatePurchaseOrderStatus(purchaseOrder);
+            }
+            return RESULT_SUCCESS;
+        }
+        return RESULT_ERROR;
+    }
+
+    public String batchAudit(String[] orderNumbers) {
+        for (String orderNumber : orderNumbers) {
+            Optional<PurchaseOrder> purchaseOrderOptional = Optional.ofNullable(getOne(orderNumber));
+            if (purchaseOrderOptional.isPresent() && purchaseOrderOptional.get().getOrderStatusId() == 1) {
+                PurchaseOrder purchaseOrder = new PurchaseOrder();
+                purchaseOrder.setOrderNumber(purchaseOrderOptional.get().getOrderNumber());
+                if (purchaseOrderOptional.get().getOrderPayType() == 1 || purchaseOrderOptional.get().getOrderPayType() == 3) {
+                    purchaseOrder.setOrderStatusId(2);
+                    purchaseDao.updatePurchaseOrderStatus(purchaseOrder);
+                } else {
+                    purchaseOrder.setOrderStatusId(3);
+                    purchaseDao.updatePurchaseOrderStatus(purchaseOrder);
+                }
+            }
+        }
+        return RESULT_SUCCESS;
+    }
+
     public PurchaseOrder getOne(String orderNumber) {
         PurchaseOrder purchaseOrder = purchaseDao.selectPurchaseOrderByOrderNumber(orderNumber);
         purchaseOrder.setPurchaseOrderDetails(purchaseDao.selectPurchaseOrderDetailByOrderNumber(purchaseOrder.getOrderNumber()));
@@ -95,41 +130,5 @@ public class PurchaseService {
         });
         return pageInfo;
     }
-
-    public String audit(String orderNumber) {
-        Optional<PurchaseOrder> purchaseOrderOptional = Optional.ofNullable(getOne(orderNumber));
-        if (purchaseOrderOptional.isPresent() && purchaseOrderOptional.get().getOrderStatusId() == 1) {
-            PurchaseOrder purchaseOrder = new PurchaseOrder();
-            purchaseOrder.setOrderNumber(purchaseOrderOptional.get().getOrderNumber());
-            if (purchaseOrderOptional.get().getOrderPayType() == 1 || purchaseOrderOptional.get().getOrderPayType() == 3) {
-                purchaseOrder.setOrderStatusId(2);
-                purchaseDao.updatePurchaseOrderStatus(purchaseOrder);
-            } else {
-                purchaseOrder.setOrderStatusId(3);
-                purchaseDao.updatePurchaseOrderStatus(purchaseOrder);
-            }
-            return RESULT_SUCCESS;
-        }
-        return RESULT_ERROR;
-    }
-
-    public String batchAudit(String[] orderNumbers) {
-        for (String orderNumber : orderNumbers) {
-            Optional<PurchaseOrder> purchaseOrderOptional = Optional.ofNullable(getOne(orderNumber));
-            if (purchaseOrderOptional.isPresent() && purchaseOrderOptional.get().getOrderStatusId() == 1) {
-                PurchaseOrder purchaseOrder = new PurchaseOrder();
-                purchaseOrder.setOrderNumber(purchaseOrderOptional.get().getOrderNumber());
-                if (purchaseOrderOptional.get().getOrderPayType() == 1 || purchaseOrderOptional.get().getOrderPayType() == 3) {
-                    purchaseOrder.setOrderStatusId(2);
-                    purchaseDao.updatePurchaseOrderStatus(purchaseOrder);
-                } else {
-                    purchaseOrder.setOrderStatusId(3);
-                    purchaseDao.updatePurchaseOrderStatus(purchaseOrder);
-                }
-            }
-        }
-        return RESULT_SUCCESS;
-    }
-
 
 }

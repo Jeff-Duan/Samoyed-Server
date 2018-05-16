@@ -204,4 +204,60 @@ public class WareHouseApi {
         }
     }
 
+    /*
+     * 仓储出库-销售
+     * */
+
+    @PostMapping(value = "/saleDeliver")
+    public Map<String, Object> saleDeliver(@RequestParam("orderNumber") String orderNumber) {
+        String result = wareHouseService.saleDeliver(orderNumber);
+        switch (result) {
+            case WareHouseService.RESULT_SUCCESS:
+                return successResult();
+            case WareHouseService.RESULT_NOT_ENOUGH:
+                return notEnoughResult();
+            default:
+                return notEnoughResult();
+        }
+    }
+
+    @PostMapping(value = "/saleBatchDeliver")
+    public Map<String, Object> saleBatchDeliver(@RequestParam("orderNumbers[]") String[] orderNumbers) {
+        String result = wareHouseService.saleBatchDeliver(orderNumbers);
+        switch (result) {
+            case WareHouseService.RESULT_SUCCESS:
+                return successResult();
+            case WareHouseService.RESULT_NOT_ENOUGH:
+                return notEnoughResult();
+            default:
+                return notEnoughResult();
+        }
+    }
+
+    @PostMapping(value = "/saleBack")
+    public Map<String, Object> saleBack(@RequestParam("orderNumber") String orderNumber) {
+        String result = wareHouseService.saleBack(orderNumber);
+        switch (result) {
+            case WareHouseService.RESULT_SUCCESS:
+                return successResult();
+            case WareHouseService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @PostMapping(value = "/saleBatchBack")
+    public Map<String, Object> saleBatchBack(@RequestParam("orderNumbers[]") String[] orderNumbers) {
+        String result = wareHouseService.saleBatchBack(orderNumbers);
+        switch (result) {
+            case WareHouseService.RESULT_SUCCESS:
+                return successResult();
+            case WareHouseService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
 }

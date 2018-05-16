@@ -2,9 +2,11 @@ package com.cherish.demo.service;
 
 import com.cherish.demo.dao.ProduceDao;
 import com.cherish.demo.dao.PurchaseDao;
+import com.cherish.demo.dao.SaleDao;
 import com.cherish.demo.dao.WareHouseDao;
 import com.cherish.demo.entity.produce.ProduceOrder;
 import com.cherish.demo.entity.purchase.PurchaseOrder;
+import com.cherish.demo.entity.sale.SaleOrder;
 import com.cherish.demo.entity.warehouse.WareHouseMaterial;
 import com.cherish.demo.entity.warehouse.WareHouseProduce;
 import com.cherish.demo.entity.warehouse.WareHouseWaste;
@@ -31,10 +33,16 @@ public class WareHouseService {
     ProduceService produceService;
 
     @Autowired
+    SaleService saleService;
+
+    @Autowired
     PurchaseDao purchaseDao;
 
     @Autowired
     ProduceDao produceDao;
+
+    @Autowired
+    SaleDao saleDao;
 
     @Autowired
     WareHouseDao wareHouseDao;
@@ -179,7 +187,7 @@ public class WareHouseService {
                 wareHouseDao.updateAddWareHouseProduce(wareHouseProduce);
             });
             WareHouseWaste wareHouseWaste = new WareHouseWaste();
-            wareHouseWaste.setWasteNumber(conversion(produceOrderOptional.get().getOrderWasteUnitId(),produceOrderOptional.get().getOrderWasteNumber()));
+            wareHouseWaste.setWasteNumber(conversion(produceOrderOptional.get().getOrderWasteUnitId(), produceOrderOptional.get().getOrderWasteNumber()));
             wareHouseDao.updateAddWareHouseWaste(wareHouseWaste);
             ProduceOrder produceOrder = new ProduceOrder();
             produceOrder.setOrderNumber(produceOrderOptional.get().getOrderNumber());
@@ -215,25 +223,26 @@ public class WareHouseService {
                 //库存量
                 double number2 = wareHouseDao.selectWareHouseMaterial(String.valueOf(produceOrderPlanDetail.getMaterial().getMaterialId())).getMaterialNumber();
                 //判断库存
-                if (number2 - number1 >= 0 && bool.get() == true) {
-                    //减少库存
-                    WareHouseMaterial wareHouseMaterial = new WareHouseMaterial();
-                    wareHouseMaterial.setMaterialId(produceOrderPlanDetail.getDetailMaterialId());
-                    wareHouseMaterial.setMaterialNumber(number1);
-                    wareHouseDao.updateReduceWareHouseMaterial(wareHouseMaterial);
-                } else {
+                if (number2 - number1 < 0 && bool.get()) {
                     bool.set(false);
                 }
             });
-            //修改订单状态
-            if (bool.get() == true) {
+            if (bool.get()) {
+                produceOrderOptional.get().getProduceOrderPlanDetails().stream().forEach(produceOrderPlanDetail -> {
+                    //减少库存
+                    WareHouseMaterial wareHouseMaterial = new WareHouseMaterial();
+                    wareHouseMaterial.setMaterialId(produceOrderPlanDetail.getDetailMaterialId());
+                    wareHouseMaterial.setMaterialNumber(conversion(produceOrderPlanDetail.getDetailMaterialUnitId(), produceOrderPlanDetail.getDetailMaterialNumber()));
+                    wareHouseDao.updateReduceWareHouseMaterial(wareHouseMaterial);
+                });
+                //修改订单状态
                 ProduceOrder produceOrder = new ProduceOrder();
                 produceOrder.setOrderNumber(produceOrderOptional.get().getOrderNumber());
                 produceOrder.setOrderStatusId(3);
                 produceDao.updateProduceOrderStatus(produceOrder);
             }
         }
-        if (bool.get() == true) {
+        if (bool.get()) {
             return RESULT_SUCCESS;
         } else {
             return RESULT_NOT_ENOUGH;
@@ -243,6 +252,91 @@ public class WareHouseService {
     public String produceBatchIssue(String[] orderNumbers) {
         for (String orderNumber : orderNumbers) {
             String result = produceIssue(orderNumber);
+            if (RESULT_NOT_ENOUGH.equals(result)) {
+                return RESULT_NOT_ENOUGH;
+            }
+        }
+        return RESULT_SUCCESS;
+    }
+
+    /*
+     *仓储出库-销售
+     */
+
+    @Transactional
+    public String saleDeliver(String orderNumber) throws RuntimeException {
+        AtomicBoolean bool = new AtomicBoolean(true);
+        Optional<SaleOrder> saleOrderOptional = Optional.ofNullable(saleService.getOne(orderNumber));
+        if (saleOrderOptional.isPresent()) {
+            saleOrderOptional.get().getSaleOrderDetails().stream().forEach(saleOrderDetail -> {
+                //需求量
+                double number1 = conversion(saleOrderDetail.getDetailProduceUnitId(), saleOrderDetail.getDetailProduceNumber());
+                //库存量
+                WareHouseProduce wareHouseProduce = new WareHouseProduce();
+                wareHouseProduce.setProduceId(saleOrderDetail.getDetailProduceId());
+                wareHouseProduce.setProduceTypeId(saleOrderDetail.getDetailProduceTypeId());
+                double number2 = wareHouseDao.selectWareHouseProduce(wareHouseProduce).getProduceNumber();
+                //判断库存
+                if (number2 - number1 < 0 && bool.get()) {
+                    bool.set(false);
+                }
+            });
+            if (bool.get()) {
+                saleOrderOptional.get().getSaleOrderDetails().stream().forEach(saleOrderDetail -> {
+                    //减少库存
+                    WareHouseProduce wareHouseProduce = new WareHouseProduce();
+                    wareHouseProduce.setProduceId(saleOrderDetail.getDetailProduceId());
+                    wareHouseProduce.setProduceTypeId(saleOrderDetail.getDetailProduceTypeId());
+                    wareHouseProduce.setProduceNumber(conversion(saleOrderDetail.getDetailProduceUnitId(), saleOrderDetail.getDetailProduceNumber()));
+                    wareHouseDao.updateReduceWareHouseProduce(wareHouseProduce);
+                });
+                //修改订单状态
+                SaleOrder saleOrder = new SaleOrder();
+                saleOrder.setOrderNumber(saleOrderOptional.get().getOrderNumber());
+                saleOrder.setOrderStatusId(4);
+                saleDao.updateSaleOrderStatus(saleOrder);
+            }
+        }
+        if (bool.get()) {
+            return RESULT_SUCCESS;
+        } else {
+            return RESULT_NOT_ENOUGH;
+        }
+    }
+
+    public String saleBatchDeliver(String[] orderNumbers) {
+        for (String orderNumber : orderNumbers) {
+            String result = saleDeliver(orderNumber);
+            if (RESULT_NOT_ENOUGH.equals(result)) {
+                return RESULT_NOT_ENOUGH;
+            }
+        }
+        return RESULT_SUCCESS;
+    }
+
+    @Transactional
+    public String saleBack(String orderNumber) {
+        Optional<SaleOrder> saleOrderOptional = Optional.ofNullable(saleService.getOne(orderNumber));
+        if (saleOrderOptional.isPresent()) {
+            saleOrderOptional.get().getSaleOrderDetails().forEach(saleOrderDetail -> {
+                WareHouseProduce wareHouseProduce = new WareHouseProduce();
+                wareHouseProduce.setProduceId(saleOrderDetail.getDetailProduceId());
+                wareHouseProduce.setProduceTypeId(saleOrderDetail.getDetailProduceTypeId());
+                wareHouseProduce.setProduceNumber(conversion(saleOrderDetail.getDetailProduceUnitId(),saleOrderDetail.getDetailProduceNumber()));
+                wareHouseDao.updateAddWareHouseProduce(wareHouseProduce);
+            });
+            SaleOrder saleOrder = new SaleOrder();
+            saleOrder.setOrderNumber(saleOrderOptional.get().getOrderNumber());
+            saleOrder.setOrderStatusId(5);
+            saleDao.updateSaleOrderStatus(saleOrder);
+            return RESULT_SUCCESS;
+        }
+        return RESULT_ERROR;
+    }
+
+    public String saleBatchBack(String[] orderNumbers) {
+        for (String orderNumber : orderNumbers) {
+            String result = saleBack(orderNumber);
             if (RESULT_NOT_ENOUGH.equals(result)) {
                 return RESULT_NOT_ENOUGH;
             }

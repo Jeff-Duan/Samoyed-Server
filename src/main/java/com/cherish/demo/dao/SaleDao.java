@@ -13,14 +13,20 @@ public interface SaleDao {
 
     void insertSaleOrderDetail(SaleOrderDetail saleOrderDetail);
 
-    List<SaleOrder> selectAllSaleOrder(String statusId);
+    void updateSaleOrderStatus(SaleOrder saleOrder);
 
-    List<SaleOrderDetail> selectSaleOrderDetailByOrderNumber(String orderNumber);
+    void updateSaleOrderMoney(SaleOrder saleOrder);
+
+    SaleOrder selectSaleOrderByOrderNumber(String orderNumber);
+
+    List<SaleOrder> selectAllSaleOrder(String statusId);
 
     List<SaleOrder> selectAllIsPayDepositSaleOrder();
 
     List<SaleOrder> selectAllIsPayFinalSaleOrder();
 
     List<SaleOrder> selectAllIsSuccessSaleOrder();
+
+    List<SaleOrderDetail> selectSaleOrderDetailByOrderNumber(String orderNumber);
 
 }
