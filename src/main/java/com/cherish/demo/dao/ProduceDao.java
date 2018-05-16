@@ -14,6 +14,10 @@ public interface ProduceDao {
 
     void insertProduceOrderPlanDetail(ProduceOrderPlanDetail produceOrderPlanDetail);
 
+    void insertProduceOrderActualDetail(ProduceOrderActualDetail produceOrderActualDetail);
+
+    void updateProduceWaste(ProduceOrder produceOrder);
+
     void updateProduceOrderStatus(ProduceOrder produceOrder);
 
     ProduceOrder selectProduceOrderByOrderNumber(String orderNumber);

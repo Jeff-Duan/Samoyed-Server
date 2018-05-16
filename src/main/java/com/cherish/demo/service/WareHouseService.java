@@ -6,6 +6,8 @@ import com.cherish.demo.dao.WareHouseDao;
 import com.cherish.demo.entity.produce.ProduceOrder;
 import com.cherish.demo.entity.purchase.PurchaseOrder;
 import com.cherish.demo.entity.warehouse.WareHouseMaterial;
+import com.cherish.demo.entity.warehouse.WareHouseProduce;
+import com.cherish.demo.entity.warehouse.WareHouseWaste;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -154,6 +156,43 @@ public class WareHouseService {
     public String purchaseBatchStorage(String[] orderNumbers) {
         for (String orderNumber : orderNumbers) {
             String result = purchaseStorage(orderNumber);
+            if (RESULT_ERROR.equals(result)) {
+                return RESULT_ERROR;
+            }
+        }
+        return RESULT_SUCCESS;
+    }
+
+    /*
+     *仓储入库-生产
+     */
+
+    @Transactional
+    public String produceStorage(String orderNumber) {
+        Optional<ProduceOrder> produceOrderOptional = Optional.ofNullable(produceService.getOne(orderNumber));
+        if (produceOrderOptional.isPresent()) {
+            produceOrderOptional.get().getProduceOrderActualDetails().forEach(produceOrderActualDetail -> {
+                WareHouseProduce wareHouseProduce = new WareHouseProduce();
+                wareHouseProduce.setProduceId(produceOrderActualDetail.getDetailProduceId());
+                wareHouseProduce.setProduceTypeId(produceOrderActualDetail.getDetailProduceTypeId());
+                wareHouseProduce.setProduceNumber(produceOrderActualDetail.getDetailProduceNumber());
+                wareHouseDao.updateAddWareHouseProduce(wareHouseProduce);
+            });
+            WareHouseWaste wareHouseWaste = new WareHouseWaste();
+            wareHouseWaste.setWasteNumber(conversion(produceOrderOptional.get().getOrderWasteUnitId(),produceOrderOptional.get().getOrderWasteNumber()));
+            wareHouseDao.updateAddWareHouseWaste(wareHouseWaste);
+            ProduceOrder produceOrder = new ProduceOrder();
+            produceOrder.setOrderNumber(produceOrderOptional.get().getOrderNumber());
+            produceOrder.setOrderStatusId(13);
+            produceDao.updateProduceOrderStatus(produceOrder);
+            return RESULT_SUCCESS;
+        }
+        return RESULT_ERROR;
+    }
+
+    public String produceBatchStorage(String[] orderNumbers) {
+        for (String orderNumber : orderNumbers) {
+            String result = produceStorage(orderNumber);
             if (RESULT_ERROR.equals(result)) {
                 return RESULT_ERROR;
             }

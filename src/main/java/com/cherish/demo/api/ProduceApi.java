@@ -46,6 +46,19 @@ public class ProduceApi {
         }
     }
 
+    @PostMapping(value = "/actual")
+    public Map<String, Object> actual(@RequestParam("data") String data) {
+        String result = produceService.actual(data);
+        switch (result) {
+            case ProduceService.RESULT_SUCCESS:
+                return successResult();
+            case ProduceService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
     @PostMapping(value = "/audit")
     public Map audit(@RequestParam("orderNumber") String orderNumber) {
         String result = produceService.audit(orderNumber);
@@ -88,6 +101,71 @@ public class ProduceApi {
     @PostMapping(value = "/batchIncome")
     public Map batchIncome(@RequestParam("orderNumbers[]") String[] orderNumbers) {
         String result = produceService.batchIncome(orderNumbers);
+        switch (result) {
+            case ProduceService.RESULT_SUCCESS:
+                return successResult();
+            case ProduceService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @PostMapping(value = "/transfer")
+    public Map transfer(@RequestParam("orderNumber") String orderNumber) {
+        String result = produceService.transfer(orderNumber);
+        switch (result) {
+            case ProduceService.RESULT_SUCCESS:
+                return successResult();
+            case ProduceService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @PostMapping(value = "/batchTransfer")
+    public Map batchTransfer(@RequestParam("orderNumbers[]") String[] orderNumbers) {
+        String result = produceService.batchTransfer(orderNumbers);
+        switch (result) {
+            case ProduceService.RESULT_SUCCESS:
+                return successResult();
+            case ProduceService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @PostMapping(value = "/check")
+    public Map check(@RequestParam("orderNumber") String orderNumber) {
+        String result = produceService.check(orderNumber);
+        switch (result) {
+            case ProduceService.RESULT_SUCCESS:
+                return successResult();
+            case ProduceService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @PostMapping(value = "/batchCheck")
+    public Map batchCheck(@RequestParam("orderNumbers[]") String[] orderNumbers) {
+        String result = produceService.batchCheck(orderNumbers);
+        switch (result) {
+            case ProduceService.RESULT_SUCCESS:
+                return successResult();
+            case ProduceService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @GetMapping(value = "/order/actual/isExist")
+    public Map actualDetailIsExist(@RequestParam("orderNumber") String orderNumber) {
+        String result = produceService.actualDetailIsExist(orderNumber);
         switch (result) {
             case ProduceService.RESULT_SUCCESS:
                 return successResult();

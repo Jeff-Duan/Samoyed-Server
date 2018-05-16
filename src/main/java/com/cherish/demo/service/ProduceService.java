@@ -23,6 +23,7 @@ import java.util.Optional;
 public class ProduceService {
 
     private static final Logger logger = Logger.getLogger(ProduceService.class);
+    private static final long[] PRODUCE_STEP_LIST = {4, 6, 8, 10};
     public static final String RESULT_SUCCESS = "SUCCESS";
     public static final String RESULT_ERROR = "ERROR";
 
@@ -60,6 +61,17 @@ public class ProduceService {
     }
 
     @Transactional
+    public String actual(String data) {
+        //数据转换
+        ProduceOrder produceOrder = gson.fromJson(data, ProduceOrder.class);
+        produceOrder.getProduceOrderActualDetails().stream().forEach(produceOrderActualDetail -> {
+            produceDao.insertProduceOrderActualDetail(produceOrderActualDetail);
+        });
+        produceDao.updateProduceWaste(produceOrder);
+        return RESULT_SUCCESS;
+    }
+
+    @Transactional
     public String audit(String orderNumber) {
         Optional<ProduceOrder> produceOrderOptional = Optional.ofNullable(getOne(orderNumber));
         if (produceOrderOptional.isPresent() && produceOrderOptional.get().getOrderStatusId() == 1) {
@@ -75,7 +87,7 @@ public class ProduceService {
     public String batchAudit(String[] orderNumbers) {
         for (String orderNumber : orderNumbers) {
             String result = audit(orderNumber);
-            if(RESULT_ERROR.equals(result)){
+            if (RESULT_ERROR.equals(result)) {
                 return RESULT_ERROR;
             }
         }
@@ -98,11 +110,75 @@ public class ProduceService {
     public String batchIncome(String[] orderNumbers) {
         for (String orderNumber : orderNumbers) {
             String result = income(orderNumber);
-            if(RESULT_ERROR.equals(result)){
+            if (RESULT_ERROR.equals(result)) {
                 return RESULT_ERROR;
             }
         }
         return RESULT_SUCCESS;
+    }
+
+    @Transactional
+    public String transfer(String orderNumber) {
+        Optional<ProduceOrder> produceOrderOptional = Optional.ofNullable(getOne(orderNumber));
+        if (produceOrderOptional.isPresent()) {
+            for (long value : PRODUCE_STEP_LIST) {
+                if (value == produceOrderOptional.get().getOrderStatusId()) {
+                    ProduceOrder produceOrder = new ProduceOrder();
+                    produceOrder.setOrderNumber(produceOrderOptional.get().getOrderNumber());
+                    produceOrder.setOrderStatusId(produceOrderOptional.get().getOrderStatusId() + 1);
+                    produceDao.updateProduceOrderStatus(produceOrder);
+                    break;
+                }
+            }
+            return RESULT_SUCCESS;
+        }
+        return RESULT_ERROR;
+    }
+
+    public String batchTransfer(String[] orderNumbers) {
+        for (String orderNumber : orderNumbers) {
+            String result = transfer(orderNumber);
+            if (RESULT_ERROR.equals(result)) {
+                return RESULT_ERROR;
+            }
+        }
+        return RESULT_SUCCESS;
+    }
+
+    @Transactional
+    public String check(String orderNumber) {
+        Optional<ProduceOrder> produceOrderOptional = Optional.ofNullable(getOne(orderNumber));
+        if (produceOrderOptional.isPresent()) {
+            for (long value : PRODUCE_STEP_LIST) {
+                if ((value + 1) == produceOrderOptional.get().getOrderStatusId()) {
+                    ProduceOrder produceOrder = new ProduceOrder();
+                    produceOrder.setOrderNumber(produceOrderOptional.get().getOrderNumber());
+                    produceOrder.setOrderStatusId(produceOrderOptional.get().getOrderStatusId() + 1);
+                    produceDao.updateProduceOrderStatus(produceOrder);
+                    break;
+                }
+            }
+            return RESULT_SUCCESS;
+        }
+        return RESULT_ERROR;
+    }
+
+    public String batchCheck(String[] orderNumbers) {
+        for (String orderNumber : orderNumbers) {
+            String result = check(orderNumber);
+            if (RESULT_ERROR.equals(result)) {
+                return RESULT_ERROR;
+            }
+        }
+        return RESULT_SUCCESS;
+    }
+
+
+    public String actualDetailIsExist(String orderNumber){
+        if(produceDao.selectAllProduceOrderActualDetailByOrderNumber(orderNumber).size() != 0){
+            return RESULT_SUCCESS;
+        }
+        return RESULT_ERROR;
     }
 
     public ProduceOrder getOne(String orderNumber) {

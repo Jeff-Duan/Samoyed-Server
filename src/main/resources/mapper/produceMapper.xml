@@ -129,6 +129,19 @@
         ,#{detailMaterialUnitId},#{detailMaterialNumber});
     </insert>
 
+    <insert id="insertProduceOrderActualDetail"
+            parameterType="com.cherish.demo.entity.produce.ProduceOrderActualDetail">
+        insert into samoyed_produce_order_actual_detail( detail_order_number,detail_produce_id,
+        detail_produce_type_id,detail_produce_unit_id,detail_produce_number)
+        values(#{detailOrderNumber},#{detailProduceId},#{detailProduceTypeId},#{detailProduceUnitId},#{detailProduceNumber});
+    </insert>
+
+    <update id="updateProduceWaste" parameterType="com.cherish.demo.entity.produce.ProduceOrder">
+        update samoyed_produce_order set
+        order_waste_unit_id=#{orderWasteUnitId},order_waste_number=#{orderWasteNumber} where order_number=
+        #{orderNumber}
+    </update>
+
     <update id="updateProduceOrderStatus" parameterType="com.cherish.demo.entity.produce.ProduceOrder">
         update samoyed_produce_order set order_status_id= #{orderStatusId} where order_number= #{orderNumber}
     </update>

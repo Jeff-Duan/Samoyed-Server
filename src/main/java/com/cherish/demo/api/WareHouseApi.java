@@ -145,6 +145,36 @@ public class WareHouseApi {
     }
 
     /*
+     *仓储入库-生产
+     */
+
+    @PostMapping(value = "/produceStorage")
+    public Map<String, Object> produceStorage(@RequestParam("orderNumber") String orderNumber) {
+        String result = wareHouseService.produceStorage(orderNumber);
+        switch (result) {
+            case WareHouseService.RESULT_SUCCESS:
+                return successResult();
+            case WareHouseService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @PostMapping(value = "/produceBatchStorage")
+    public Map<String, Object> produceBatchStorage(@RequestParam("orderNumbers[]") String[] orderNumbers) {
+        String result = wareHouseService.produceBatchStorage(orderNumbers);
+        switch (result) {
+            case WareHouseService.RESULT_SUCCESS:
+                return successResult();
+            case WareHouseService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    /*
      *仓储出库-生产
      */
 

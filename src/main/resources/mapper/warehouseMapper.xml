@@ -7,16 +7,21 @@
 <mapper namespace="com.cherish.demo.dao.WareHouseDao">
 
     <resultMap id="WareHouseMaterialResultMap" type="com.cherish.demo.entity.warehouse.WareHouseMaterial">
-        <id property="id" column="id"></id>
-        <result property="materialId" column="material_id"></result>
-        <result property="materialNumber" column="material_number"></result>
+        <id property="id" column="id"/>
+        <result property="materialId" column="material_id"/>
+        <result property="materialNumber" column="material_number"/>
     </resultMap>
 
     <resultMap id="WareHouseProduceResultMap" type="com.cherish.demo.entity.warehouse.WareHouseProduce">
-        <id property="id" column="id"></id>
-        <result property="produceId" column="produce_id"></result>
-        <result property="produceTypeId" column="produce_type_id"></result>
-        <result property="produceNumber" column="produce_number"></result>
+        <id property="id" column="id"/>
+        <result property="produceId" column="produce_id"/>
+        <result property="produceTypeId" column="produce_type_id"/>
+        <result property="produceNumber" column="produce_number"/>
+    </resultMap>
+
+    <resultMap id="WareHouseWasteResultMap" type="com.cherish.demo.entity.warehouse.WareHouseWaste">
+        <id property="id" column="id"/>
+        <result property="wasteNumber" column="waste_number"/>
     </resultMap>
 
     <update id="updateAddWareHouseMaterial" parameterType="com.cherish.demo.entity.warehouse.WareHouseMaterial">
@@ -27,6 +32,15 @@
     <update id="updateReduceWareHouseMaterial" parameterType="com.cherish.demo.entity.warehouse.WareHouseMaterial">
         update samoyed_warehouse_material set material_number=material_number-#{materialNumber} where
         material_id=#{materialId}
+    </update>
+
+    <update id="updateAddWareHouseProduce" parameterType="com.cherish.demo.entity.warehouse.WareHouseProduce">
+        update samoyed_warehouse_produce set produce_number=#{produceNumber}+produce_number where
+        produce_id=#{produceId} and produce_type_id=#{produceTypeId}
+    </update>
+
+    <update id="updateAddWareHouseWaste" parameterType="com.cherish.demo.entity.warehouse.WareHouseWaste">
+        update samoyed_warehouse_waste set waste_number=#{wasteNumber}+waste_number
     </update>
 
     <select id="selectWareHouseMaterial" parameterType="String" resultMap="WareHouseMaterialResultMap">
