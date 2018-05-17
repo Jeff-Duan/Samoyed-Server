@@ -1,14 +1,15 @@
 package com.cherish.demo.api;
 
+import com.cherish.demo.entity.warehouse.WareHouseMaterial;
+import com.cherish.demo.entity.warehouse.WareHouseProduce;
+import com.cherish.demo.entity.warehouse.WareHouseWaste;
 import com.cherish.demo.service.FinanceService;
 import com.cherish.demo.service.WareHouseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -31,7 +32,9 @@ public class WareHouseApi {
         return newResult(-1, "fail", "操作失败,请联系服务支持(Cherish-Hui).");
     }
 
-    private Map notEnoughResult() { return newResult(1, "not_enough", "操作终止,库存不足."); }
+    private Map notEnoughResult() {
+        return newResult(1, "not_enough", "操作终止,库存不足.");
+    }
 
     @Autowired
     WareHouseService wareHouseService;
@@ -259,5 +262,64 @@ public class WareHouseApi {
                 return failResult();
         }
     }
+
+    /*
+     * 仓储明细
+     * */
+
+    @PostMapping(value = "/material/update")
+    public Map<String, Object> updateMaterial(@RequestParam("data") String data) {
+        String result = wareHouseService.updateMaterial(data);
+        switch (result) {
+            case WareHouseService.RESULT_SUCCESS:
+                return successResult();
+            case WareHouseService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @PostMapping(value = "/produce/update")
+    public Map<String, Object> updateProduce(@RequestParam("data") String data) {
+        String result = wareHouseService.updateProduce(data);
+        switch (result) {
+            case WareHouseService.RESULT_SUCCESS:
+                return successResult();
+            case WareHouseService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @PostMapping(value = "/waste/update")
+    public Map<String, Object> updateWaste(@RequestParam("data") String data) {
+        String result = wareHouseService.updateWaste(data);
+        switch (result) {
+            case WareHouseService.RESULT_SUCCESS:
+                return successResult();
+            case WareHouseService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @GetMapping("/getAllMaterial")
+    public List<WareHouseMaterial> getAllMaterial() {
+        return wareHouseService.getAllMaterial();
+    }
+
+    @GetMapping("/getAllProduce")
+    public List<WareHouseProduce> getAllProduce() {
+        return wareHouseService.getAllProduce();
+    }
+
+    @GetMapping("/getAllWaste")
+    public WareHouseWaste getAllWaste() {
+        return wareHouseService.getAllWaste();
+    }
+
 
 }

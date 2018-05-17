@@ -10,13 +10,17 @@ import com.cherish.demo.entity.sale.SaleOrder;
 import com.cherish.demo.entity.warehouse.WareHouseMaterial;
 import com.cherish.demo.entity.warehouse.WareHouseProduce;
 import com.cherish.demo.entity.warehouse.WareHouseWaste;
+import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.NumberFormat;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class WareHouseService {
@@ -47,6 +51,9 @@ public class WareHouseService {
     @Autowired
     WareHouseDao wareHouseDao;
 
+    @Autowired
+    Gson gson;
+
     //单位转换-输出为公斤
     public double conversion(long unitId, double number) {
         if (unitId == 1) {
@@ -56,6 +63,15 @@ public class WareHouseService {
         } else {
             return number;
         }
+    }
+
+    //计算比率
+    public String ratio(double minNumber, double maxNumber) {
+        // 创建一个数值格式化对象
+        NumberFormat numberFormat = NumberFormat.getInstance();
+        // 设置精确到小数点后2位
+        numberFormat.setMaximumFractionDigits(2);
+        return numberFormat.format((float) minNumber / (float) maxNumber * 100);
     }
 
     /*
@@ -322,7 +338,7 @@ public class WareHouseService {
                 WareHouseProduce wareHouseProduce = new WareHouseProduce();
                 wareHouseProduce.setProduceId(saleOrderDetail.getDetailProduceId());
                 wareHouseProduce.setProduceTypeId(saleOrderDetail.getDetailProduceTypeId());
-                wareHouseProduce.setProduceNumber(conversion(saleOrderDetail.getDetailProduceUnitId(),saleOrderDetail.getDetailProduceNumber()));
+                wareHouseProduce.setProduceNumber(conversion(saleOrderDetail.getDetailProduceUnitId(), saleOrderDetail.getDetailProduceNumber()));
                 wareHouseDao.updateAddWareHouseProduce(wareHouseProduce);
             });
             SaleOrder saleOrder = new SaleOrder();
@@ -344,5 +360,59 @@ public class WareHouseService {
         return RESULT_SUCCESS;
     }
 
+    /*
+     *仓储明细
+     */
+
+    @Transactional
+    public String updateMaterial(String data){
+        WareHouseMaterial wareHouseMaterial = gson.fromJson(data,WareHouseMaterial.class);
+        wareHouseDao.updateWareHouseMaterial(wareHouseMaterial);
+        return RESULT_SUCCESS;
+    }
+
+    @Transactional
+    public String updateProduce(String data){
+        WareHouseProduce wareHouseProduce = gson.fromJson(data,WareHouseProduce.class);
+        wareHouseDao.updateWareHouseProduce(wareHouseProduce);
+        return RESULT_SUCCESS;
+    }
+
+    @Transactional
+    public String updateWaste(String data){
+        WareHouseWaste wareHouseWaste = gson.fromJson(data,WareHouseWaste.class);
+        wareHouseDao.updateWareHouseWaste(wareHouseWaste);
+        return RESULT_SUCCESS;
+    }
+
+    public List<WareHouseMaterial> getAllMaterial() {
+        AtomicReference<Double> materialCount = new AtomicReference<>(0.00);
+        List<WareHouseMaterial> wareHouseMaterials = wareHouseDao.selectAllWareHouseMaterial();
+        wareHouseMaterials.stream().forEach(wareHouseMaterial -> {
+            materialCount.updateAndGet(v -> new Double((double) (v + wareHouseMaterial.getMaterialNumber())));
+        });
+        wareHouseMaterials.stream().forEach(wareHouseMaterial -> {
+            wareHouseMaterial.setRatio(Double.valueOf( ratio(wareHouseMaterial.getMaterialNumber(),materialCount.get())));
+        });
+        return wareHouseMaterials;
+    }
+
+    public List<WareHouseProduce> getAllProduce() {
+        AtomicReference<Double> produceCount = new AtomicReference<>(0.00);
+        List<WareHouseProduce> wareHouseProduces = wareHouseDao.selectAllWareHouseProduce();
+        wareHouseProduces.stream().forEach(wareHouseProduce -> {
+            produceCount.updateAndGet(v -> new Double((double) (v + wareHouseProduce.getProduceNumber())));
+        });
+        wareHouseProduces.stream().forEach(wareHouseProduce -> {
+            wareHouseProduce.setRatio(Double.valueOf(ratio(wareHouseProduce.getProduceNumber(),produceCount.get())));
+        });
+        return wareHouseProduces;
+    }
+
+    public WareHouseWaste getAllWaste() {
+        WareHouseWaste wareHouseWaste = wareHouseDao.selectWareHouseWaste();
+        wareHouseWaste.setRatio(100.00);
+        return wareHouseWaste;
+    }
 
 }
