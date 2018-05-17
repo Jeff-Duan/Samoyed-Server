@@ -1,6 +1,8 @@
 package com.cherish.demo.entity.purchase;
 
 import com.cherish.demo.entity.basic.Supplier;
+import com.cherish.demo.entity.finance.PayRecord;
+import com.cherish.demo.entity.finance.ReceivableRecord;
 import com.cherish.demo.entity.user.User;
 
 import java.util.List;
@@ -28,6 +30,8 @@ public class PurchaseOrder {
     private PurchaseOrderStatus purchaseOrderStatus;
     private Supplier supplier;
     private User user;
+    private List<PayRecord> payRecords;
+    private List<ReceivableRecord> receivableRecords;
 
     public PurchaseOrder() {
         this.orderInsertTime = "1980-01-01";
@@ -197,5 +201,21 @@ public class PurchaseOrder {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<PayRecord> getPayRecords() {
+        return payRecords;
+    }
+
+    public void setPayRecords(List<PayRecord> payRecords) {
+        this.payRecords = payRecords;
+    }
+
+    public List<ReceivableRecord> getReceivableRecords() {
+        return receivableRecords;
+    }
+
+    public void setReceivableRecords(List<ReceivableRecord> receivableRecords) {
+        this.receivableRecords = receivableRecords;
     }
 }

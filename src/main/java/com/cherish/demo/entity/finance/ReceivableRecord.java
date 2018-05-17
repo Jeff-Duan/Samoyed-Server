@@ -1,5 +1,7 @@
 package com.cherish.demo.entity.finance;
 
+import com.cherish.demo.entity.user.User;
+
 public class ReceivableRecord {
 
     private long id;
@@ -7,6 +9,8 @@ public class ReceivableRecord {
     private String recordInsertTime;
     private long recordUserId;
     private double recordReceivableMoney;
+
+    private User user;
 
     public long getId() {
         return id;
@@ -25,11 +29,11 @@ public class ReceivableRecord {
     }
 
     public String getRecordInsertTime() {
-        return recordInsertTime;
+        return recordInsertTime.substring(0, 10);
     }
 
     public void setRecordInsertTime(String recordInsertTime) {
-        this.recordInsertTime = recordInsertTime;
+        this.recordInsertTime = recordInsertTime.substring(0, 10);
     }
 
     public long getRecordUserId() {
@@ -46,5 +50,13 @@ public class ReceivableRecord {
 
     public void setRecordReceivableMoney(double recordReceivableMoney) {
         this.recordReceivableMoney = recordReceivableMoney;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

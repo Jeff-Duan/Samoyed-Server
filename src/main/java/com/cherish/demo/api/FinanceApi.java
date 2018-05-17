@@ -1,14 +1,15 @@
 package com.cherish.demo.api;
 
+import com.cherish.demo.entity.purchase.PurchaseOrder;
+import com.cherish.demo.entity.sale.SaleOrder;
 import com.cherish.demo.service.FinanceService;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -36,7 +37,7 @@ public class FinanceApi {
 
     @PostMapping(value = "/purchasePay")
     public Map<String, Object> purchasePay(@RequestParam("orderNumber") String orderNumber, HttpSession session) {
-        String result = financeService.purchasePay(orderNumber,session);
+        String result = financeService.purchasePay(orderNumber, session);
         switch (result) {
             case FinanceService.RESULT_SUCCESS:
                 return successResult();
@@ -49,7 +50,7 @@ public class FinanceApi {
 
     @PostMapping(value = "/purchaseReceivable")
     public Map<String, Object> purchaseReceivable(@RequestParam("orderNumber") String orderNumber, HttpSession session) {
-        String result = financeService.purchaseReceivable(orderNumber,session);
+        String result = financeService.purchaseReceivable(orderNumber, session);
         switch (result) {
             case FinanceService.RESULT_SUCCESS:
                 return successResult();
@@ -62,7 +63,7 @@ public class FinanceApi {
 
     @PostMapping(value = "/saleReceivable")
     public Map<String, Object> saleReceivable(@RequestParam("orderNumber") String orderNumber, HttpSession session) {
-        String result = financeService.saleReceivable(orderNumber,session);
+        String result = financeService.saleReceivable(orderNumber, session);
         switch (result) {
             case FinanceService.RESULT_SUCCESS:
                 return successResult();
@@ -75,7 +76,7 @@ public class FinanceApi {
 
     @PostMapping(value = "/salePay")
     public Map<String, Object> salePay(@RequestParam("orderNumber") String orderNumber, HttpSession session) {
-        String result = financeService.salePay(orderNumber,session);
+        String result = financeService.salePay(orderNumber, session);
         switch (result) {
             case FinanceService.RESULT_SUCCESS:
                 return successResult();
@@ -84,6 +85,30 @@ public class FinanceApi {
             default:
                 return failResult();
         }
+    }
+
+    @GetMapping(value = "/purchasePayRecord")
+    public PageInfo<PurchaseOrder> purchasePayRecord(@RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                                 @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        return financeService.purchasePayRecord(pageNum, pageSize);
+    }
+
+    @GetMapping(value = "/purchaseReceivableRecord")
+    public PageInfo<PurchaseOrder> purchaseReceivableRecord(@RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                                            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        return financeService.purchaseReceivableRecord(pageNum, pageSize);
+    }
+
+    @GetMapping(value = "/saleReceivableRecord")
+    public PageInfo<SaleOrder> saleReceivableRecord(@RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                                    @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        return financeService.saleReceivableRecord(pageNum, pageSize);
+    }
+
+    @GetMapping(value = "/salePayRecord")
+    public PageInfo<SaleOrder> salePayRecord(@RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
+                                                    @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        return financeService.salePayRecord(pageNum, pageSize);
     }
 
 }

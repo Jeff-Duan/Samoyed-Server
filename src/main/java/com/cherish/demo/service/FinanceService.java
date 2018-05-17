@@ -9,12 +9,14 @@ import com.cherish.demo.entity.purchase.PurchaseOrder;
 import com.cherish.demo.entity.sale.SaleOrder;
 import com.cherish.demo.entity.user.User;
 import com.cherish.demo.exception.NotFoundException;
+import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -238,6 +240,44 @@ public class FinanceService {
             return RESULT_SUCCESS;
         }
         return RESULT_ERROR;
+    }
+
+    /*
+     * 财务对账
+     * */
+
+    public PageInfo<PurchaseOrder> purchasePayRecord(Integer pageNum, Integer pageSize) {
+        PageInfo<PurchaseOrder> pageInfo = purchaseService.getAll("7", pageNum, pageSize);
+        pageInfo.getList().stream().forEach(purchaseOrder -> {
+            purchaseOrder.setPayRecords(financeDao.selectPayRecordByOrderNumber(purchaseOrder.getOrderNumber()));
+        });
+        return pageInfo;
+    }
+
+    public PageInfo<PurchaseOrder> purchaseReceivableRecord(Integer pageNum, Integer pageSize) {
+        PageInfo<PurchaseOrder> pageInfo = purchaseService.getAll("8", pageNum, pageSize);
+        pageInfo.getList().stream().forEach(purchaseOrder -> {
+            purchaseOrder.setPayRecords(financeDao.selectPayRecordByOrderNumber(purchaseOrder.getOrderNumber()));
+            purchaseOrder.setReceivableRecords(financeDao.selectReceivableRecordByOrderNumber(purchaseOrder.getOrderNumber()));
+        });
+        return pageInfo;
+    }
+
+    public PageInfo<SaleOrder> saleReceivableRecord(Integer pageNum, Integer pageSize) {
+        PageInfo<SaleOrder> pageInfo = saleService.getAll("6", pageNum, pageSize);
+        pageInfo.getList().stream().forEach(saleOrder -> {
+            saleOrder.setReceivableRecords(financeDao.selectReceivableRecordByOrderNumber(saleOrder.getOrderNumber()));
+        });
+        return pageInfo;
+    }
+
+    public PageInfo<SaleOrder> salePayRecord(Integer pageNum, Integer pageSize) {
+        PageInfo<SaleOrder> pageInfo = saleService.getAll("7", pageNum, pageSize);
+        pageInfo.getList().stream().forEach(saleOrder -> {
+            saleOrder.setReceivableRecords(financeDao.selectReceivableRecordByOrderNumber(saleOrder.getOrderNumber()));
+            saleOrder.setPayRecords(financeDao.selectPayRecordByOrderNumber(saleOrder.getOrderNumber()));
+        });
+        return pageInfo;
     }
 
 }

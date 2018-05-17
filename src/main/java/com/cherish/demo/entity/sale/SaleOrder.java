@@ -1,5 +1,7 @@
 package com.cherish.demo.entity.sale;
 
+import com.cherish.demo.entity.finance.PayRecord;
+import com.cherish.demo.entity.finance.ReceivableRecord;
 import com.cherish.demo.entity.user.User;
 
 import java.util.List;
@@ -23,6 +25,8 @@ public class SaleOrder {
     private List<SaleOrderDetail> saleOrderDetails;
     private SaleOrderStatus saleOrderStatus;
     private User user;
+    private List<PayRecord> payRecords;
+    private List<ReceivableRecord> receivableRecords;
 
 
     public SaleOrder() {
@@ -161,5 +165,21 @@ public class SaleOrder {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<PayRecord> getPayRecords() {
+        return payRecords;
+    }
+
+    public void setPayRecords(List<PayRecord> payRecords) {
+        this.payRecords = payRecords;
+    }
+
+    public List<ReceivableRecord> getReceivableRecords() {
+        return receivableRecords;
+    }
+
+    public void setReceivableRecords(List<ReceivableRecord> receivableRecords) {
+        this.receivableRecords = receivableRecords;
     }
 }

@@ -6,6 +6,72 @@
 <!-- namespace为命名空间，应该是mapper接口的全称-->
 <mapper namespace="com.cherish.demo.dao.FinanceDao">
 
+    <resultMap id="PayRecordResultMap" type="com.cherish.demo.entity.finance.PayRecord">
+        <id property="id" column="id"/>
+        <result property="orderNumber" column="order_number"/>
+        <result property="recordInsertTime" column="record_insert_time"/>
+        <result property="recordUserId" column="record_user_id"/>
+        <result property="recordPayMoney" column="record_pay_money"/>
+        <association property="user" javaType="com.cherish.demo.entity.user.User">
+            <id property="userId" column="user_id"/>
+            <result property="userName" column="user_name"/>
+            <result property="userEnglishName" column="user_english_name"/>
+            <result property="userPassword" column="user_password"/>
+            <result property="userSex" column="user_sex"/>
+            <result property="userBirth" column="user_birth"/>
+            <result property="userOriginProvince" column="user_origin_province"/>
+            <result property="userOriginCity" column="user_origin_city"/>
+            <result property="userOriginArea" column="user_origin_area"/>
+            <result property="userTel" column="user_tel"/>
+            <result property="userStatus" column="user_status"/>
+            <result property="userEntryTime" column="user_entry_time"/>
+            <result property="userQuitTime" column="user_quit_time"/>
+            <result property="userDeptId" column="user_dept_id"/>
+            <result property="userPositionId" column="user_position_id"/>
+            <association property="dept" javaType="com.cherish.demo.entity.user.Dept">
+                <id property="deptId" column="dept_id"/>
+                <result property="deptName" column="dept_name"/>
+            </association>
+            <association property="position" javaType="com.cherish.demo.entity.user.Position">
+                <id property="positionId" column="position_id"/>
+                <result property="positionName" column="position_name"/>
+            </association>
+        </association>
+    </resultMap>
+
+    <resultMap id="ReceivableRecordResultMap" type="com.cherish.demo.entity.finance.ReceivableRecord">
+        <id property="id" column="id"/>
+        <result property="orderNumber" column="order_number"/>
+        <result property="recordInsertTime" column="record_insert_time"/>
+        <result property="recordUserId" column="record_user_id"/>
+        <result property="recordReceivableMoney" column="record_receivable_money"/>
+        <association property="user" javaType="com.cherish.demo.entity.user.User">
+            <id property="userId" column="user_id"/>
+            <result property="userName" column="user_name"/>
+            <result property="userEnglishName" column="user_english_name"/>
+            <result property="userPassword" column="user_password"/>
+            <result property="userSex" column="user_sex"/>
+            <result property="userBirth" column="user_birth"/>
+            <result property="userOriginProvince" column="user_origin_province"/>
+            <result property="userOriginCity" column="user_origin_city"/>
+            <result property="userOriginArea" column="user_origin_area"/>
+            <result property="userTel" column="user_tel"/>
+            <result property="userStatus" column="user_status"/>
+            <result property="userEntryTime" column="user_entry_time"/>
+            <result property="userQuitTime" column="user_quit_time"/>
+            <result property="userDeptId" column="user_dept_id"/>
+            <result property="userPositionId" column="user_position_id"/>
+            <association property="dept" javaType="com.cherish.demo.entity.user.Dept">
+                <id property="deptId" column="dept_id"/>
+                <result property="deptName" column="dept_name"/>
+            </association>
+            <association property="position" javaType="com.cherish.demo.entity.user.Position">
+                <id property="positionId" column="position_id"/>
+                <result property="positionName" column="position_name"/>
+            </association>
+        </association>
+    </resultMap>
+
     <insert id="insertPayRecord" parameterType="com.cherish.demo.entity.finance.PayRecord">
         insert into
         samoyed_finance_pay_record(order_number,record_insert_time,record_user_id,record_pay_money)values(#{orderNumber},date(now()),#{recordUserId},#{recordPayMoney})
@@ -15,6 +81,20 @@
         insert into
         samoyed_finance_receivable_record(order_number,record_insert_time,record_user_id,record_receivable_money)values(#{orderNumber},date(now()),#{recordUserId},#{recordReceivableMoney})
     </insert>
+
+    <select id="selectPayRecordByOrderNumber" parameterType="String" resultMap="PayRecordResultMap">
+        select * from samoyed_finance_pay_record a
+        left join samoyed_user_user b on a.record_user_id=b.user_id
+        left join samoyed_user_dept c on b.user_dept_id=c.dept_id
+        left join samoyed_user_position d on b.user_position_id= d.position_id where a.order_number=#{orderNumber}
+    </select>
+
+    <select id="selectReceivableRecordByOrderNumber" parameterType="String" resultMap="ReceivableRecordResultMap">
+        select * from samoyed_finance_receivable_record a
+        left join samoyed_user_user b on a.record_user_id=b.user_id
+        left join samoyed_user_dept c on b.user_dept_id=c.dept_id
+        left join samoyed_user_position d on b.user_position_id= d.position_id where a.order_number=#{orderNumber}
+    </select>
 
 
 </mapper>
