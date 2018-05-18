@@ -104,6 +104,14 @@
         order_to_pay_money=#{orderToPayMoney} where order_number= #{orderNumber}
     </update>
 
+    <delete id="deletePurchaseOrder" parameterType="String">
+        delete from samoyed_purchase_order where order_number=#{orderNumber}
+    </delete>
+
+    <delete id="deletePurchaseOrderDetail" parameterType="String">
+        delete from samoyed_purchase_order_detail where detail_order_number=#{orderNumber}
+    </delete>
+
     <select id="selectPurchaseOrderByOrderNumber" parameterType="String" resultMap="PurchaseOrderResultMap">
         select * from samoyed_purchase_order a
         left join samoyed_basic_supplier b on a.order_supplier_id=b.supplier_id
@@ -156,6 +164,5 @@
         left join samoyed_basic_unit c on a.detail_unit_id=c.unit_id
         where a.detail_order_number=#{orderNumber}
     </select>
-
 
 </mapper>

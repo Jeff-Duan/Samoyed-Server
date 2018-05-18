@@ -17,6 +17,10 @@ public interface SaleDao {
 
     void updateSaleOrderMoney(SaleOrder saleOrder);
 
+    void deleteSaleOrder(String orderNumber);
+
+    void deleteSaleOrderDetail(String orderNumber);
+
     SaleOrder selectSaleOrderByOrderNumber(String orderNumber);
 
     List<SaleOrder> selectAllSaleOrder(String statusId);

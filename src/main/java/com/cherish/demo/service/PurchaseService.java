@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
@@ -87,6 +88,23 @@ public class PurchaseService {
                     purchaseOrder.setOrderStatusId(3);
                     purchaseDao.updatePurchaseOrderStatus(purchaseOrder);
                 }
+            }
+        }
+        return RESULT_SUCCESS;
+    }
+
+    @Transactional
+    public String delete(String orderNumber) {
+        purchaseDao.deletePurchaseOrder(orderNumber);
+        purchaseDao.deletePurchaseOrderDetail(orderNumber);
+        return RESULT_SUCCESS;
+    }
+
+    public String batchDelete(String[] orderNumbers) {
+        for (String orderNumber : orderNumbers) {
+            String result = delete(orderNumber);
+            if (RESULT_ERROR.equals(result)) {
+                return RESULT_ERROR;
             }
         }
         return RESULT_SUCCESS;

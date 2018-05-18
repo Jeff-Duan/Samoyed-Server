@@ -20,6 +20,10 @@ public interface ProduceDao {
 
     void updateProduceOrderStatus(ProduceOrder produceOrder);
 
+    void deleteProduceOrder(String orderNumber);
+
+    void deleteProduceOrderPlanDetail(String orderNumber);
+
     ProduceOrder selectProduceOrderByOrderNumber(String orderNumber);
 
     List<ProduceOrder> selectAllProduceOrder(String statusId);

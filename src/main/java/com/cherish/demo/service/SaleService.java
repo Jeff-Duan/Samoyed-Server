@@ -80,8 +80,26 @@ public class SaleService {
         return RESULT_SUCCESS;
     }
 
+    @Transactional
+    public String delete(String orderNumber) {
+        Optional<SaleOrder> saleOrderOptional = Optional.ofNullable(getOne(orderNumber));
+        if (saleOrderOptional.isPresent() && saleOrderOptional.get().getOrderStatusId() == 1) {
+            saleDao.deleteSaleOrder(orderNumber);
+            saleDao.deleteSaleOrderDetail(orderNumber);
+            return RESULT_SUCCESS;
+        }
+        return RESULT_ERROR;
+    }
 
-
+    public String batchDelete(String[] orderNumbers) {
+        for (String orderNumber : orderNumbers) {
+            String result = delete(orderNumber);
+            if(RESULT_ERROR.equals(result)){
+                return RESULT_ERROR;
+            }
+        }
+        return RESULT_SUCCESS;
+    }
 
     public SaleOrder getOne(String orderNumber){
         SaleOrder saleOrder = saleDao.selectSaleOrderByOrderNumber(orderNumber);

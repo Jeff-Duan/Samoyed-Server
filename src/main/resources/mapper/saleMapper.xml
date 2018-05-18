@@ -99,6 +99,14 @@
         order_to_receivable_money=#{orderToReceivableMoney} where order_number= #{orderNumber}
     </update>
 
+    <delete id="deleteSaleOrder" parameterType="String">
+        delete from samoyed_sale_order where order_number=#{orderNumber}
+    </delete>
+
+    <delete id="deleteSaleOrderDetail" parameterType="String">
+        delete from samoyed_sale_order_detail where detail_order_number=#{orderNumber}
+    </delete>
+
     <select id="selectSaleOrderByOrderNumber" parameterType="String" resultMap="SaleOrderResultMap">
         select * from samoyed_sale_order a
         left join samoyed_user_user b on a.order_user_id=b.user_id
@@ -157,6 +165,5 @@
         left join samoyed_sale_order_status e on a.order_status_id=e.status_id
         where a.order_total_money=a.order_is_receivable_money
     </select>
-
 
 </mapper>

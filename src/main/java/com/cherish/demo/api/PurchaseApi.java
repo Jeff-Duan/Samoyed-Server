@@ -71,6 +71,32 @@ public class PurchaseApi {
         }
     }
 
+    @PostMapping(value = "/delete")
+    public Map delete(@RequestParam("orderNumber") String orderNumber) {
+        String result = purchaseService.delete(orderNumber);
+        switch (result) {
+            case PurchaseService.RESULT_SUCCESS:
+                return successResult();
+            case PurchaseService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @PostMapping(value = "/batchDelete")
+    public Map batchDelete(@RequestParam("orderNumbers[]") String[] orderNumbers) {
+        String result = purchaseService.batchDelete(orderNumbers);
+        switch (result) {
+            case PurchaseService.RESULT_SUCCESS:
+                return successResult();
+            case PurchaseService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
     @GetMapping(value = "/order/all")
     public PageInfo<PurchaseOrder> allOrder(@RequestParam(value = "statusId", required = false, defaultValue = "0") String statusId,
                                             @RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,

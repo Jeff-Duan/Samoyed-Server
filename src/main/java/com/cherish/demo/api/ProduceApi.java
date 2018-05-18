@@ -163,6 +163,32 @@ public class ProduceApi {
         }
     }
 
+    @PostMapping(value = "/delete")
+    public Map delete(@RequestParam("orderNumber") String orderNumber) {
+        String result = produceService.delete(orderNumber);
+        switch (result) {
+            case ProduceService.RESULT_SUCCESS:
+                return successResult();
+            case ProduceService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
+    @PostMapping(value = "/batchDelete")
+    public Map batchDelete(@RequestParam("orderNumbers[]") String[] orderNumbers) {
+        String result = produceService.batchDelete(orderNumbers);
+        switch (result) {
+            case ProduceService.RESULT_SUCCESS:
+                return successResult();
+            case ProduceService.RESULT_ERROR:
+                return failResult();
+            default:
+                return failResult();
+        }
+    }
+
     @GetMapping(value = "/order/actual/isExist")
     public Map actualDetailIsExist(@RequestParam("orderNumber") String orderNumber) {
         String result = produceService.actualDetailIsExist(orderNumber);

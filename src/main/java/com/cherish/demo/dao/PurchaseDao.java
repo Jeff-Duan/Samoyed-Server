@@ -17,6 +17,10 @@ public interface PurchaseDao {
 
     void updatePurchaseOrderMoney(PurchaseOrder purchaseOrder);
 
+    void deletePurchaseOrder(String orderNumber);
+
+    void deletePurchaseOrderDetail(String orderNumber);
+
     PurchaseOrder selectPurchaseOrderByOrderNumber(String orderNumber);
 
     List<PurchaseOrder> selectAllPurchaseOrder(String statusId);

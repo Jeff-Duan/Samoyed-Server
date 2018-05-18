@@ -146,6 +146,14 @@
         update samoyed_produce_order set order_status_id= #{orderStatusId} where order_number= #{orderNumber}
     </update>
 
+    <delete id="deleteProduceOrder" parameterType="String">
+        delete from samoyed_produce_order where order_number=#{orderNumber}
+    </delete>
+
+    <delete id="deleteProduceOrderPlanDetail" parameterType="String">
+        delete from samoyed_produce_order_plan_detail where detail_order_number=#{orderNumber}
+    </delete>
+
     <select id="selectProduceOrderByOrderNumber" parameterType="String" resultMap="ProduceOrderResultMap">
         select * from samoyed_produce_order a
         left join samoyed_user_user b on a.order_user_id=b.user_id
@@ -216,6 +224,5 @@
         left join samoyed_basic_unit d on a.detail_produce_unit_id=d.unit_id
         where a.detail_order_number=#{orderNumber}
     </select>
-
 
 </mapper>

@@ -173,9 +173,26 @@ public class ProduceService {
         return RESULT_SUCCESS;
     }
 
+    @Transactional
+    public String delete(String orderNumber) {
+        produceDao.deleteProduceOrder(orderNumber);
+        produceDao.deleteProduceOrderPlanDetail(orderNumber);
+        return RESULT_SUCCESS;
+    }
 
-    public String actualDetailIsExist(String orderNumber){
-        if(produceDao.selectAllProduceOrderActualDetailByOrderNumber(orderNumber).size() != 0){
+    public String batchDelete(String[] orderNumbers) {
+        for (String orderNumber : orderNumbers) {
+            String result = delete(orderNumber);
+            if (RESULT_ERROR.equals(result)) {
+                return RESULT_ERROR;
+            }
+        }
+        return RESULT_SUCCESS;
+    }
+
+
+    public String actualDetailIsExist(String orderNumber) {
+        if (produceDao.selectAllProduceOrderActualDetailByOrderNumber(orderNumber).size() != 0) {
             return RESULT_SUCCESS;
         }
         return RESULT_ERROR;
