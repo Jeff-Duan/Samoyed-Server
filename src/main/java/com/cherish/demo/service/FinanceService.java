@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -48,6 +49,7 @@ public class FinanceService {
      * 财务付款-采购
      * */
 
+    @Transactional
     public String purchasePay(String orderNumber, HttpSession session) {
         User user;
         PurchaseOrder purchaseOrder = new PurchaseOrder();
@@ -113,6 +115,7 @@ public class FinanceService {
      * 财务收款-采购
      * */
 
+    @Transactional
     public String purchaseReceivable(String orderNumber, HttpSession session) {
         User user;
         PurchaseOrder purchaseOrder = new PurchaseOrder();
@@ -167,6 +170,7 @@ public class FinanceService {
      * 财务收款-销售
      * */
 
+    @Transactional
     public String saleReceivable(String orderNumber, HttpSession session) {
         User user;
         SaleOrder saleOrder = new SaleOrder();
@@ -213,6 +217,7 @@ public class FinanceService {
      * 财务付款-销售
      * */
 
+    @Transactional
     public String salePay(String orderNumber, HttpSession session) {
         User user;
         SaleOrder saleOrder = new SaleOrder();
@@ -278,6 +283,14 @@ public class FinanceService {
             saleOrder.setPayRecords(financeDao.selectPayRecordByOrderNumber(saleOrder.getOrderNumber()));
         });
         return pageInfo;
+    }
+
+    public List<PayRecord> getPayRecordByDate(String date){
+        return financeDao.selectPayRecordByDate(date);
+    }
+
+    public List<ReceivableRecord> getReceivableRecordByDate(String date){
+        return financeDao.selectReceivableRecordByDate(date);
     }
 
 }

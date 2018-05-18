@@ -104,7 +104,7 @@
         left join samoyed_user_user b on a.order_user_id=b.user_id
         left join samoyed_user_dept c on b.user_dept_id=c.dept_id
         left join samoyed_user_position d on b.user_position_id= d.position_id
-        left join samoyed_purchase_order_status e on a.order_status_id=e.status_id
+        left join samoyed_sale_order_status e on a.order_status_id=e.status_id
         where 1=1
         <if test="_parameter !=0 and _parameter != 0">
             and a.order_number=#{orderNumber}
@@ -116,7 +116,7 @@
         left join samoyed_user_user b on a.order_user_id=b.user_id
         left join samoyed_user_dept c on b.user_dept_id=c.dept_id
         left join samoyed_user_position d on b.user_position_id= d.position_id
-        left join samoyed_purchase_order_status e on a.order_status_id=e.status_id
+        left join samoyed_sale_order_status e on a.order_status_id=e.status_id
         where 1=1
         <if test="_parameter !=0 and _parameter != 0">
             and a.order_status_id=#{statusId}
@@ -136,7 +136,7 @@
         left join samoyed_user_user b on a.order_user_id=b.user_id
         left join samoyed_user_dept c on b.user_dept_id=c.dept_id
         left join samoyed_user_position d on b.user_position_id= d.position_id
-        left join samoyed_purchase_order_status e on a.order_status_id=e.status_id
+        left join samoyed_sale_order_status e on a.order_status_id=e.status_id
         where a.order_status_id=2
     </select>
 
@@ -145,7 +145,7 @@
         left join samoyed_user_user b on a.order_user_id=b.user_id
         left join samoyed_user_dept c on b.user_dept_id=c.dept_id
         left join samoyed_user_position d on b.user_position_id= d.position_id
-        left join samoyed_purchase_order_status e on a.order_status_id=e.status_id
+        left join samoyed_sale_order_status e on a.order_status_id=e.status_id
         where a.order_status_id=4
     </select>
 
@@ -154,7 +154,7 @@
         left join samoyed_user_user b on a.order_user_id=b.user_id
         left join samoyed_user_dept c on b.user_dept_id=c.dept_id
         left join samoyed_user_position d on b.user_position_id= d.position_id
-        left join samoyed_purchase_order_status e on a.order_status_id=e.status_id
+        left join samoyed_sale_order_status e on a.order_status_id=e.status_id
         where a.order_total_money=a.order_is_receivable_money
     </select>
 

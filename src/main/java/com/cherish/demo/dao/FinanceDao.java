@@ -15,6 +15,10 @@ public interface FinanceDao {
 
     List<PayRecord> selectPayRecordByOrderNumber(String orderNumber);
 
+    List<PayRecord> selectPayRecordByDate(String recordInsertTime);
+
     List<ReceivableRecord> selectReceivableRecordByOrderNumber(String orderNumber);
+
+    List<ReceivableRecord> selectReceivableRecordByDate(String recordInsertTime);
 
 }

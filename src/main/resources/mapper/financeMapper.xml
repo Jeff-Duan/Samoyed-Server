@@ -89,11 +89,25 @@
         left join samoyed_user_position d on b.user_position_id= d.position_id where a.order_number=#{orderNumber}
     </select>
 
+    <select id="selectPayRecordByDate" parameterType="String" resultMap="PayRecordResultMap">
+        select * from samoyed_finance_pay_record a
+        left join samoyed_user_user b on a.record_user_id=b.user_id
+        left join samoyed_user_dept c on b.user_dept_id=c.dept_id
+        left join samoyed_user_position d on b.user_position_id= d.position_id where a.record_insert_time=#{recordInsertTime}
+    </select>
+
     <select id="selectReceivableRecordByOrderNumber" parameterType="String" resultMap="ReceivableRecordResultMap">
         select * from samoyed_finance_receivable_record a
         left join samoyed_user_user b on a.record_user_id=b.user_id
         left join samoyed_user_dept c on b.user_dept_id=c.dept_id
         left join samoyed_user_position d on b.user_position_id= d.position_id where a.order_number=#{orderNumber}
+    </select>
+
+    <select id="selectReceivableRecordByDate" parameterType="String" resultMap="ReceivableRecordResultMap">
+        select * from samoyed_finance_receivable_record a
+        left join samoyed_user_user b on a.record_user_id=b.user_id
+        left join samoyed_user_dept c on b.user_dept_id=c.dept_id
+        left join samoyed_user_position d on b.user_position_id= d.position_id where a.record_insert_time=#{recordInsertTime}
     </select>
 
 
